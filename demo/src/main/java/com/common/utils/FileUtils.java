@@ -64,4 +64,38 @@ public class FileUtils {
             }
         }
     }
+
+    /**
+     * 文件夹拷贝
+     * @param srcDir 源文件夹路径
+     * @param destDir 目标存储路径
+     */
+    public static void copyDir(String srcDir, String destDir) {
+        //源文件夹File对象
+        File src = new File(srcDir);
+        //目标存储File对象
+        File dest = new File(destDir);
+
+        copyDirDetail(src, dest);
+    }
+
+    /**
+     * 文件夹拷贝操作
+     * @param src 源文件File对象
+     * @param dest 目标文件File对象
+     */
+    private static void copyDirDetail(File src, File dest) {
+        if(src.isDirectory()) {// 文件夹判断
+            //确保目标文件夹存在
+            dest.mkdirs();
+            //获取下一级目录及文件
+            for(File sub : src.listFiles()) {
+                copyDirDetail(sub, new File(dest, sub.getName()));
+            }
+        } else if (src.isFile()) {//文件直接拷贝
+            copyFile(src, dest);
+        } else {
+            System.out.println("未知的File对象");
+        }
+    }
 }
