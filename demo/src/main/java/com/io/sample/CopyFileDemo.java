@@ -10,7 +10,7 @@ import java.io.*;
  * 4、释放资源：关闭
  * @author wanchongyang
  */
-public class Demo01 {
+public class CopyFileDemo {
 
     public static void main(String[] args) {
         // 文件拷贝
