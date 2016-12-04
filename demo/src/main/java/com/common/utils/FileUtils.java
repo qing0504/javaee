@@ -28,6 +28,13 @@ public class FileUtils {
             System.out.println("不是文件");
             return;
         }
+
+        //文件夹
+        if (dest.isDirectory()) {
+            System.out.println(dest.getAbsolutePath() + "\t不是建立与文件夹同名的文件");
+            return;
+        }
+
         //2、选择流
         InputStream in = null;
         OutputStream ou = null;
