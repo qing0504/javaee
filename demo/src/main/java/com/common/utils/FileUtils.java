@@ -4,6 +4,8 @@ import java.io.*;
 
 /**
  * 文件处理工具类
+ * 字节缓冲流：BufferedInputStream、BufferedOutputStream
+ * 字符缓冲流：BufferedReader、BufferedWriter
  * Created by Martin on 2016/12/4.
  */
 public class FileUtils {
@@ -39,8 +41,9 @@ public class FileUtils {
         InputStream in = null;
         OutputStream ou = null;
         try {
-            in = new FileInputStream(src);
-            ou = new FileOutputStream(dest);
+            // 缓冲流，提高性能
+            in = new BufferedInputStream(new FileInputStream(src));
+            ou = new BufferedOutputStream(new FileOutputStream(dest));
             //3、文件拷贝 循环+读取+写出
             byte[] flush = new byte[1024];
             int len = 0;
