@@ -63,14 +63,8 @@ public class FileUtils {
             System.out.println("IO异常，拷贝文件失败");
         } finally {
             //关闭，先打开的后关闭
-            try {
-                if (ou != null){
-                    ou.close();
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("关闭流异常");
+            if (ou != null){
+                close("关闭流异常", ou, in);
             }
         }
     }
@@ -108,4 +102,35 @@ public class FileUtils {
             System.out.println("未知的File对象");
         }
     }
+
+    /**
+     * 关闭流
+     * 面向接口变成
+     * jdk 1.7 try with resource 不用显示写关闭代码
+     * @param errorMsg 抛出错误信息
+     * @param io       关闭流，可变参数：...，只能形参最后一个位置，处理方式与数组一致
+     */
+    public static void close(String errorMsg, Closeable... io) {
+        closeStream(errorMsg, io);
+
+    }
+
+    private static void closeStream(String errorMsg, Closeable[] io) {
+        //增强for循环
+        for (Closeable temp : io) {
+            if (temp != null) {
+                try {
+                    temp.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println(errorMsg);
+                }
+            }
+        }
+    }
+
+    public static <T extends Closeable> void closeAll(String errorMsg, T... io) {
+        closeStream(errorMsg, io);
+    }
+
 }

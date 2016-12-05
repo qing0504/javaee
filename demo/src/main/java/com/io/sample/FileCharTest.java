@@ -1,5 +1,7 @@
 package com.io.sample;
 
+import com.common.utils.FileUtils;
+
 import java.io.*;
 
 /**
@@ -53,14 +55,8 @@ public class FileCharTest {
             e.printStackTrace();
             System.out.println("文件读取失败");
         } finally {
-            try {
-                if(null != reader) {
-                    reader.close();
-                    writer.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("文件关闭失败");
+            if(null != reader) {
+                FileUtils.closeAll("关闭流异常", writer, reader);
             }
         }
     }
