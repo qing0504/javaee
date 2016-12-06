@@ -78,7 +78,7 @@ public class FileUtils {
         //源文件夹File对象
         File src = new File(srcDir);
         //目标存储File对象
-        File dest = new File(destDir);
+        File dest = new File(destDir, src.getName());
 
         copyDirDetail(src, dest);
     }
@@ -90,6 +90,12 @@ public class FileUtils {
      */
     private static void copyDirDetail(File src, File dest) {
         if(src.isDirectory()) {// 文件夹判断
+            // 父目录不能拷贝到子目录中判断
+            if (dest.getAbsolutePath().contains(src.getAbsolutePath())) {
+                System.out.println("父目录不能拷贝到子目录中");
+                return;
+            }
+
             //确保目标文件夹存在
             dest.mkdirs();
             //获取下一级目录及文件
