@@ -13,5 +13,9 @@ public class SplitFileTest {
 
         //分隔
         splitFile.split("E:/javaee/demo");
+
+        //合并
+        //splitFile.mergeFile("E:/javaee/demo/javaMerge.pdf");
+        splitFile.merge("E:/javaee/demo/javaMerge.pdf");
     }
 }

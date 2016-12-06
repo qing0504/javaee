@@ -5,9 +5,10 @@ import com.common.utils.FileUtils;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
- * 分割文件对象
+ * 分割\合并文件对象
  *
  * @author wanchongyang
  */
@@ -129,6 +130,7 @@ public class SplitFile {
                 }
             }
 
+            bos.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -148,6 +150,77 @@ public class SplitFile {
     private void initPathName(String destPath) {
         for (int i = 0; i < this.size; i++) {
             this.blockPath.add(destPath + "/"+ this.fileName + ".part" + (i + 1));
+        }
+    }
+
+    /**
+     * 文件的合并
+     * @param destPath 存储文件路径
+     */
+    public void mergeFile(String destPath) {
+        //创建源
+        File dest = new File(destPath);
+        //选择流
+        BufferedOutputStream bos = null; //输出流
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(dest, true));//追加
+            BufferedInputStream bis = null;//输入流
+            for (int i = 0; i < this.size; i++) {
+                bis = new BufferedInputStream(new FileInputStream(this.blockPath.get(i)));
+                //缓冲区
+                byte[] flush = new byte[1024];
+                //接收长度
+                int len = 0;
+                while (-1 != (len = bis.read(flush))) {
+                    bos.write(flush, 0, len);
+                }
+            }
+
+            bos.flush();
+            FileUtils.close(bis);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            FileUtils.close(bos);
+        }
+    }
+
+    /**
+     * 文件的合并，使用SequenceInputStream
+     * @param destPath 存储文件路径
+     */
+    public void merge(String destPath) {
+        //创建源
+        File dest = new File(destPath);
+        //选择流
+        BufferedOutputStream bos = null; //输出流
+        //创建一个容器
+        Vector<InputStream> vi = new Vector<>();
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(dest, true));//追加
+            for (int i = 0; i < this.size; i++) {
+                vi.add(new BufferedInputStream(new FileInputStream(this.blockPath.get(i))));
+            }
+            //合并流
+            SequenceInputStream sis = new SequenceInputStream(vi.elements());
+            //缓冲区
+            byte[] flush = new byte[1024];
+            //接收长度
+            int len = 0;
+            while (-1 != (len = sis.read(flush))) {
+                bos.write(flush, 0, len);
+            }
+
+            bos.flush();
+            FileUtils.close(sis);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            FileUtils.close(bos);
         }
     }
 

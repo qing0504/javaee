@@ -121,6 +121,10 @@ public class FileUtils {
 
     }
 
+    public static void close(Closeable... io) {
+        closeStream("文件流关闭失败", io);
+    }
+
     private static void closeStream(String errorMsg, Closeable[] io) {
         //增强for循环
         for (Closeable temp : io) {
