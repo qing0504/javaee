@@ -1,4 +1,4 @@
-package com.io.sample;
+package com.io;
 
 /**
  * 文件分割
