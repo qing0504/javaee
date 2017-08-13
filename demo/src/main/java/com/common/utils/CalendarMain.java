@@ -15,7 +15,7 @@ public class CalendarMain {
 
         Date currentDate = new Date();
         System.out.println(DateUtil.formatDateFull(currentDate));
-        String solarDateStr = CalendarUtil2.lunarToSolar("20170815");
+        String solarDateStr = CalendarUtil2.lunarToSolar("20170515");
         System.out.println(solarDateStr);
         Date solarDate = DateUtil.parse(solarDateStr, DateUtil.DATE_JFP_STR);
         int dayInterval = DateUtil.getDaySpace(currentDate, solarDate);
