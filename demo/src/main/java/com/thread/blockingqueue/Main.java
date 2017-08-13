@@ -12,11 +12,8 @@ public class Main {
         //1、生成队列数据
         BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<>();
         for (int i = 1; i <= 100; i++) {
-            try {
-                blockingQueue.put(i);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // put阻塞 offer非阻塞
+            blockingQueue.offer(i);
         }
 
         //2、业务数据处理
@@ -30,6 +27,7 @@ public class Main {
                 public void run() {
                     while (true) {
                         try {
+                            // poll非阻塞 take阻塞
                             Integer queueItem = blockingQueue.poll(10, TimeUnit.MILLISECONDS);
                             Thread.sleep(1000);
                             if (queueItem != null) {
