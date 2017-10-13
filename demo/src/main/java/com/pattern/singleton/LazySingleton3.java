@@ -6,7 +6,7 @@ package com.pattern.singleton;
  */
 public class LazySingleton3 {
     /* 持有私有静态实例，防止被引用，此处赋值为null，目的是实现延迟加载 */
-    private static /*volatile*/ LazySingleton3 instance = null;
+    private static volatile LazySingleton3 instance = null;
 
     /* 私有构造方法，防止被实例化 */
     private LazySingleton3() {
