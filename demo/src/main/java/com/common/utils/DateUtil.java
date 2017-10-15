@@ -2,7 +2,9 @@ package com.common.utils;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,12 +19,30 @@ public class DateUtil {
     public static final String DATE_KEY_STR = "yyMMddHHmmss";
 
     /**
-     * 获取两个时间间隔天数
-     *
-     * @param d1
-     * @param d2
+     * SimpleDateFormat线程安全写法
+     */
+    private static final ThreadLocal<DateFormat> DATE_FORMAT_THREAD_LOCAL = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };
+
+    /**
+     * 返回DateFormat实例，保证线程安全
      * @return
      */
+    public static DateFormat getDateFormat() {
+        return DATE_FORMAT_THREAD_LOCAL.get();
+    }
+
+        /**
+         * 获取两个时间间隔天数
+         *
+         * @param d1
+         * @param d2
+         * @return
+         */
     public static final int getDaySpace(Date d1, Date d2) {
         Calendar calst = Calendar.getInstance();
         Calendar caled = Calendar.getInstance();
