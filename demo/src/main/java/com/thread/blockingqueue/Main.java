@@ -21,31 +21,31 @@ public class Main {
         int workerCount = 5;
         final CountDownLatch latch = new CountDownLatch(workerCount);
         Random random = new Random();
-        while (workerCount > 0) {
-            new Thread(){
-                @Override
-                public void run() {
-                    while (true) {
-                        try {
-                            // poll非阻塞 take阻塞
-                            Integer queueItem = blockingQueue.poll(10, TimeUnit.MILLISECONDS);
-                            Thread.sleep(1000);
-                            if (queueItem != null) {
-                                System.out.println(Thread.currentThread().getName() + "=====" + queueItem);
-                                concurrentHashMap.put(queueItem, random.nextInt(900) + 100);
-                            } else {
-                                break;
-                            }
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+        while (workerCount-- > 0) {
+            System.out.println("workerCount-----------------" + workerCount);
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        // poll非阻塞 take阻塞
+                        Integer queueItem = blockingQueue.poll(10, TimeUnit.MILLISECONDS);
+                        Thread.sleep(1000);
+                        if (queueItem != null) {
+                            System.out.println(Thread.currentThread().getName() + "=====" + queueItem);
+                            concurrentHashMap.put(queueItem, random.nextInt(900) + 100);
+                        } else {
+                            break;
                         }
-                    }
 
-                    latch.countDown();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }.start();
-            workerCount--;
+
+                System.out.println(Thread.currentThread().getName() + " is finished.");
+
+                latch.countDown();
+            }).start();
+            //workerCount--;
         }
 
         //3、线程全部执行完成的数据处理
