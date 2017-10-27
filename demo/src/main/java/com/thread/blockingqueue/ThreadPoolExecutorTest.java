@@ -18,13 +18,14 @@ public class ThreadPoolExecutorTest {
         }
 
         //2、业务数据处理
-        ConcurrentHashMap<Integer, Integer> concurrentHashMap = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Integer, Integer> concurrentHashMap = new ConcurrentHashMap<>(16);
         int workerCount = 5;
         ThreadPoolExecutor executor = new ThreadPoolExecutor(workerCount,
                 workerCount,
                 0L,
                 TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>()
+                new LinkedBlockingQueue<>(),
+                Executors.defaultThreadFactory()
         );
         //ThreadPoolExecutor executor = new ThreadPoolExecutor(0,
         //        workerCount,
