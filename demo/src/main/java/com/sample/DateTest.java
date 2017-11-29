@@ -5,6 +5,7 @@ import com.common.utils.DateUtil;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wanchongyang
@@ -22,5 +23,8 @@ public class DateTest {
 
         bd = new BigDecimal("1.5079968E+12");
         System.out.println(DateUtil.formatDateFull(new Date(bd.longValue())));
+
+        int expireSeconds = (int) TimeUnit.HOURS.toSeconds(2);
+        System.out.println(expireSeconds);
     }
 }
