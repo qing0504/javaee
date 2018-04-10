@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -27,6 +28,26 @@ public class CollectionsTest {
 
         Instant end = Instant.now();
         System.out.println("耗时：" + Duration.between(begin, end).toMillis() + "毫秒");
+
+//     方法引用
+//        Collections.sort(personList, new Comparator<Person>() {
+//            @Override
+//            public int compare(Person x, Person y) {
+//                return x.getPersonName().compareTo(y.getPersonName());
+//            }
+//        });
+//
+//        Collections.sort(personList, (p1, p2) -> p1.getPersonName().compareTo(p2.getPersonName()) );
+//
+//        Collections.sort(personList, Comparator.comparing(p -> p.getPersonName()));
+//
+//        Collections.sort(personList, Comparator.comparing(Person::getPersonName));
+//
+//        正序
+//        personList.sort(Comparator.comparing(Person::getPersonName));
+//        反序
+//        personList.sort(Comparator.comparing(Person::getPersonName).reversed());
+
     }
 }
 
