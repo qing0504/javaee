@@ -1,16 +1,13 @@
 package com.reference;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * java8方法引用
  * @author wanchongyang
  * @date 2018/4/5
  */
-public class MethodReferenceTest {
+public class SortMethodReferenceTest {
     public static void main(String[] args) {
         List<String> sortList = Arrays.asList("Jone", "angel", "martin", "Boe");
         // method one
