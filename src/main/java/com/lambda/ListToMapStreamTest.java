@@ -1,4 +1,4 @@
-package com.stream;
+package com.lambda;
 
 import java.util.LinkedHashMap;
 import java.util.List;
