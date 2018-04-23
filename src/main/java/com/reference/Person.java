@@ -58,6 +58,10 @@ public class Person {
         return a.birthday.compareTo(b.birthday);
     }
 
+    public int comparePersonByAge(Person person) {
+        return this.getBirthday().compareTo(person.getBirthday());
+    }
+
     public static List<Person> createRoster() {
 
         List<Person> roster = new ArrayList<>();

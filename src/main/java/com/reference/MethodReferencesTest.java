@@ -1,5 +1,6 @@
 package com.reference;
 
+import java.time.chrono.IsoChronology;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -13,8 +14,7 @@ public class MethodReferencesTest {
     // The method transferElements copies elements from one collection to
     // another
 
-    public static <T, SOURCE extends Collection<T>, DEST extends Collection<T>>
-    DEST transferElements(
+    public static <T, SOURCE extends Collection<T>, DEST extends Collection<T>> DEST transferElements(
             SOURCE sourceCollection,
             Supplier<DEST> collectionFactory) {
 
@@ -54,6 +54,8 @@ public class MethodReferencesTest {
                 }
         );
 
+        Arrays.sort(rosterAsArray, (a, b) -> a.getBirthday().compareTo(b.getBirthday()));
+
         // With method reference
         Arrays.sort(rosterAsArray, Person::compareByAge);
         System.out.println("==========compareByAge============");
@@ -83,6 +85,10 @@ public class MethodReferencesTest {
 //        String[] stringArray = { "Barbara", "James", "Mary", "John",
 //                "Patricia", "Robert", "Michael", "Linda" };
 //        Arrays.sort(stringArray, String::compareToIgnoreCase);
+        // 类名:实例方法名
+        Arrays.sort(rosterAsArray, Person::comparePersonByAge);
+        System.out.println("==========comparePersonByAge============");
+        Arrays.stream(rosterAsArray).forEach(Person::printPerson);
 
         System.out.println("===rosterSetLambda(LinkedHashSet)===");
         Set<Person> rosterSetLambda =
@@ -93,6 +99,27 @@ public class MethodReferencesTest {
                 roster, HashSet::new);
         System.out.println("=========rosterSet(HashSet)========");
         rosterSet.stream().forEach(p -> p.printPerson());
+        
+        Supplier<HashSet<Person>> supplier = HashSet::new;
+        Supplier<HashSet> supplier2 = () -> new HashSet<>();
+
+        // element => Person
+        HashSet<Person> hashSet = supplier.get();
+        hashSet.add(new Person(
+                "Jane",
+                IsoChronology.INSTANCE.date(1990, 7, 15),
+                Person.Sex.FEMALE, "jane@example.com"));
+        HashSet hashSet2 = supplier2.get();
+
+        // element => Object
+        hashSet2.add(new Person(
+                "Fred",
+                IsoChronology.INSTANCE.date(1980, 6, 20),
+                Person.Sex.MALE,
+                "fred@example.com"));
+        hashSet2.add("angel");
+        System.out.println(hashSet);
+        System.out.println(hashSet2);
     }
 
 }
