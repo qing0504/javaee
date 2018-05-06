@@ -10,23 +10,23 @@ import java.util.Random;
  * 生成Token的工具类
  * Created by Martin on 2017/3/8.
  */
-public class TokenProccessor {
+public class TokenProcessor {
 
-    /*
+    /**
      *单例设计模式（饿汉式，保证类的对象在内存中只有一个）
      *1、把类的构造函数私有
      *2、自己创建一个类的对象
      *3、对外提供一个公共的方法，返回类的对象
      */
-    private TokenProccessor(){}
+    private TokenProcessor(){}
 
-    private static final TokenProccessor instance = new TokenProccessor();
+    private static final TokenProcessor instance = new TokenProcessor();
 
     /**
      * 返回类的对象
      * @return
      */
-    public static TokenProccessor getInstance(){
+    public static TokenProcessor getInstance(){
         return instance;
     }
 
