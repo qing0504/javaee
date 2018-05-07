@@ -268,17 +268,15 @@ public class BeanConverter {
         fields = getFields(clazz);
         Field[] result = null;
         if (clazz.isAnnotationPresent(Encrypt.class)) {
-            result = new Field[]{};
             result = Arrays.asList(fields)
                     .stream()
                     .filter(f -> !f.isAnnotationPresent(Ignore.class))
-                    .collect(Collectors.toList()).toArray(result);
+                    .toArray(Field[]::new);
         } else {
-            result = new Field[]{};
             result = Arrays.asList(fields)
                     .stream()
                     .filter(f -> f.isAnnotationPresent(Encrypt.class))
-                    .collect(Collectors.toList()).toArray(result);
+                    .toArray(Field[]::new);
         }
 
         Field[] f = ENCRYPT_FIELDS_CASH.putIfAbsent(clazz, result);
@@ -296,17 +294,15 @@ public class BeanConverter {
         fields = getFields(clazz);
         Field[] result = null;
         if (clazz.isAnnotationPresent(Decrypt.class)) {
-            result = new Field[]{};
             result = Arrays.asList(fields)
                     .stream()
                     .filter(f -> !f.isAnnotationPresent(Ignore.class))
-                    .collect(Collectors.toList()).toArray(result);
+                    .toArray(Field[]::new);
         } else {
-            result = new Field[]{};
             result = Arrays.asList(fields)
                     .stream()
                     .filter(f -> f.isAnnotationPresent(Decrypt.class))
-                    .collect(Collectors.toList()).toArray(result);
+                    .toArray(Field[]::new);
         }
 
         Field[] f = DECRYPT_FIELDS_CASH.putIfAbsent(clazz, result);
