@@ -19,15 +19,5 @@ public class EncryptAccount extends BaseEntity{
     private String balance;
     @Encrypt
     private String bankCode;
-
-    @Override
-    public String toString() {
-        return "EncryptAccount{" +
-                "id=" + super.getId() +
-                ", name='" + name + '\'' +
-                ", balance='" + balance + '\'' +
-                ", bankCode='" + bankCode + '\'' +
-                '}';
-    }
 }
 

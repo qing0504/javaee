@@ -6,6 +6,7 @@ import com.component.aes.model.EncryptAccount;
 import com.component.aes.model.EncryptBankInfo;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author wanchongyang
@@ -16,6 +17,8 @@ public class Client {
         // 注解作用到类的属性上
         Account account = new Account("基本账户", new BigDecimal("100.99"), "666666666666");
         account.setId(1);
+        account.setTimeCreated(new Date(System.currentTimeMillis()));
+        account.setTimeModified(new Date(System.currentTimeMillis()));
         EncryptAccount encryptAccount = BeanConverter.toEncrypt(account, EncryptAccount.class, "123");
         System.out.println(encryptAccount);
 

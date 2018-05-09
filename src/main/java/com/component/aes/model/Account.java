@@ -19,14 +19,4 @@ public class Account extends BaseEntity {
     private BigDecimal balance;
     @Decrypt
     private String bankCode;
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + super.getId() +
-                ", name='" + name + '\'' +
-                ", balance=" + balance +
-                ", bankCode='" + bankCode + '\'' +
-                '}';
-    }
 }
