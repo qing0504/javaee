@@ -14,7 +14,8 @@ import java.math.BigDecimal;
 public class Client {
     public static void main(String[] args) {
         // 注解作用到类的属性上
-        Account account = new Account(1, "基本账户", new BigDecimal("100.99"), "666666666666");
+        Account account = new Account("基本账户", new BigDecimal("100.99"), "666666666666");
+        account.setId(1);
         EncryptAccount encryptAccount = BeanConverter.toEncrypt(account, EncryptAccount.class, "123");
         System.out.println(encryptAccount);
 

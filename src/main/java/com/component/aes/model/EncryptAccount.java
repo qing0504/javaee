@@ -13,8 +13,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EncryptAccount {
-    private Integer id;
+public class EncryptAccount extends BaseEntity{
     private String name;
     @Encrypt
     private String balance;
@@ -24,7 +23,7 @@ public class EncryptAccount {
     @Override
     public String toString() {
         return "EncryptAccount{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", name='" + name + '\'' +
                 ", balance='" + balance + '\'' +
                 ", bankCode='" + bankCode + '\'' +

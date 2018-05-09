@@ -13,9 +13,7 @@ import java.math.BigDecimal;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account {
-    @Ignore
-    private Integer id;
+public class Account extends BaseEntity {
     private String name;
     @Decrypt
     private BigDecimal balance;
@@ -25,7 +23,7 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
                 ", bankCode='" + bankCode + '\'' +

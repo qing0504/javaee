@@ -51,43 +51,47 @@ public class BeanConverter {
         T t = null;
         try {
             t = clazz.newInstance();
-            Field[] fields = getFields(clazz);
-            if (fields != null && fields.length > 0) {
-                if (clazz.isAnnotationPresent(Encrypt.class)) {
-                    for (Field f : fields) {
-                        Method getMethod = getMethod(f.getName(), o.getClass(), true);
-                        Object value = getMethod.invoke(o);
-                        if (value != null) {
-                            if (value.getClass() == String.class && "".equals(value)) {
-                                continue;
-                            }
+            Class<?> superClazz = clazz;
+            while (superClazz != Object.class) {
+                Field[] fields = getFields(superClazz);
+                if (fields != null && fields.length > 0) {
+                    if (clazz.isAnnotationPresent(Encrypt.class)) {
+                        for (Field f : fields) {
+                            Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            Object value = getMethod.invoke(o);
+                            if (value != null) {
+                                if (value.getClass() == String.class && "".equals(value)) {
+                                    continue;
+                                }
 
-                            Method setMethod = getSetterMethod(clazz, f);
-                            if (f.isAnnotationPresent(Ignore.class)) {
-                                setMethod.invoke(t, value);
-                            } else {
-                                setMethod.invoke(t, AESUtil.encrypt(String.valueOf(value), encryptPassword));
+                                Method setMethod = getSetterMethod(superClazz, f);
+                                if (f.isAnnotationPresent(Ignore.class)) {
+                                    setMethod.invoke(t, value);
+                                } else {
+                                    setMethod.invoke(t, AESUtil.encrypt(String.valueOf(value), encryptPassword));
+                                }
                             }
                         }
-                    }
-                } else {
-                    for (Field f : fields) {
-                        Method getMethod = getMethod(f.getName(), o.getClass(), true);
-                        Object value = getMethod.invoke(o);
-                        if (value != null) {
-                            if (value.getClass() == String.class && "".equals(value)) {
-                                continue;
-                            }
+                    } else {
+                        for (Field f : fields) {
+                            Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            Object value = getMethod.invoke(o);
+                            if (value != null) {
+                                if (value.getClass() == String.class && "".equals(value)) {
+                                    continue;
+                                }
 
-                            Method setMethod = getSetterMethod(clazz, f);
-                            if (f.isAnnotationPresent(Encrypt.class)) {
-                                setMethod.invoke(t, AESUtil.encrypt(String.valueOf(value), encryptPassword));
-                            } else {
-                                setMethod.invoke(t, value);
+                                Method setMethod = getSetterMethod(superClazz, f);
+                                if (f.isAnnotationPresent(Encrypt.class)) {
+                                    setMethod.invoke(t, AESUtil.encrypt(String.valueOf(value), encryptPassword));
+                                } else {
+                                    setMethod.invoke(t, value);
+                                }
                             }
                         }
                     }
                 }
+                superClazz = superClazz.getSuperclass();
             }
 
         } catch (InstantiationException e) {
@@ -112,37 +116,42 @@ public class BeanConverter {
         T t = null;
         try {
             t = clazz.newInstance();
-            Field[] fields = getFields(clazz);
-            if (fields != null && fields.length > 0) {
-                if (clazz.isAnnotationPresent(Decrypt.class)) {
-                    for (Field f : fields) {
-                        Method getMethod = getMethod(f.getName(), o.getClass(), true);
-                        Object value = getMethod.invoke(o);
-                        if (value != null) {
-                            Method setMethod = getSetterMethod(clazz, f);
-                            if (f.isAnnotationPresent(Ignore.class)) {
-                                setMethod.invoke(t, value);
-                            } else {
-                                Object decryptValue = getClassTypeValue(f.getType(), AESUtil.decrypt(String.valueOf(value), decryptPassword));
-                                setMethod.invoke(t, decryptValue);
+            Class<?> superClazz = clazz;
+            while (superClazz != Object.class) {
+                Field[] fields = getFields(superClazz);
+                if (fields != null && fields.length > 0) {
+                    if (clazz.isAnnotationPresent(Decrypt.class)) {
+                        for (Field f : fields) {
+                            Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            Object value = getMethod.invoke(o);
+                            if (value != null) {
+                                Method setMethod = getSetterMethod(superClazz, f);
+                                if (f.isAnnotationPresent(Ignore.class)) {
+                                    setMethod.invoke(t, value);
+                                } else {
+                                    Object decryptValue = getClassTypeValue(f.getType(), AESUtil.decrypt(String.valueOf(value), decryptPassword));
+                                    setMethod.invoke(t, decryptValue);
+                                }
                             }
                         }
-                    }
-                } else {
-                    for (Field f : fields) {
-                        Method getMethod = getMethod(f.getName(), o.getClass(), true);
-                        Object value = getMethod.invoke(o);
-                        if (value != null) {
-                            Method setMethod = getSetterMethod(clazz, f);
-                            if (f.isAnnotationPresent(Decrypt.class)) {
-                                Object decryptValue = getClassTypeValue(f.getType(), AESUtil.decrypt(String.valueOf(value), decryptPassword));
-                                setMethod.invoke(t, decryptValue);
-                            } else {
-                                setMethod.invoke(t, value);
+                    } else {
+                        for (Field f : fields) {
+                            Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            Object value = getMethod.invoke(o);
+                            if (value != null) {
+                                Method setMethod = getSetterMethod(superClazz, f);
+                                if (f.isAnnotationPresent(Decrypt.class)) {
+                                    Object decryptValue = getClassTypeValue(f.getType(), AESUtil.decrypt(String.valueOf(value), decryptPassword));
+                                    setMethod.invoke(t, decryptValue);
+                                } else {
+                                    setMethod.invoke(t, value);
+                                }
                             }
                         }
                     }
                 }
+
+                superClazz = superClazz.getSuperclass();
             }
 
         } catch (InstantiationException e) {
