@@ -23,10 +23,12 @@ public class CallableDemo{
 
         //遍历任务的结果   
         for (Future<String> fs : resultList){   
-                try{   
-                    while(!fs.isDone());//Future返回如果没有完成，则一直循环等待，直到Future返回完成  
-                    System.out.println(fs.get());     //打印各个线程（任务）执行的结果   
-                }catch(InterruptedException e){   
+                try{
+                    //Future返回如果没有完成，则一直循环等待，直到Future返回完成
+                    while(!fs.isDone());
+                    //打印各个线程（任务）执行的结果
+                    System.out.println(fs.get());
+                }catch(InterruptedException e){
                     e.printStackTrace();   
                 }catch(ExecutionException e){   
                     e.printStackTrace();   
