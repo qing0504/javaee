@@ -14,7 +14,7 @@ public class CompletableFutureDemo2 {
         // thenApply();
 
         // 2、进行消耗
-        // thenAccept();
+        thenAccept();
 
         // 3、对上一步的计算结果不关心，执行下一个操作
         // thenRun();
@@ -44,7 +44,7 @@ public class CompletableFutureDemo2 {
         // whenComplete();
 
         // 12、运行完成时，对结果的处理。这里的完成时有两种情况，一种是正常执行，返回值。另外一种是遇到异常抛出造成程序的中断。
-        handle();
+        // handle();
     }
 
     private static void handle() {
@@ -298,13 +298,16 @@ public class CompletableFutureDemo2 {
     private static void thenAccept() {
         System.out.println("==============thenAccept==================");
         CompletableFuture.supplyAsync(() -> "hello")
-                .thenAccept((s) -> System.out.println(s + " world"));
+                .thenAccept(s -> System.out.println(Thread.currentThread().getName() + ":" + s + " world"));
     }
 
     private static void thenApply() {
         System.out.println("==============thenApply==================");
         String result = CompletableFuture.supplyAsync(() -> "hello")
-                .thenApply(s -> s + " world")
+                .thenApply(s -> {
+                    System.out.println(Thread.currentThread().getName());
+                    return s + " world";
+                })
                 .join();
         System.out.println(result);
     }
