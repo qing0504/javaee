@@ -1,5 +1,6 @@
 package com.thread.executor;
 
+import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -297,8 +298,32 @@ public class CompletableFutureDemo2 {
 
     private static void thenAccept() {
         System.out.println("==============thenAccept==================");
-        CompletableFuture.supplyAsync(() -> "hello")
-                .thenAccept(s -> System.out.println(Thread.currentThread().getName() + ":" + s + " world"));
+        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "hello";
+        }).thenAccept(s -> {
+            System.out.println(Thread.currentThread().getName() + ":" + s + " world.");
+        });
+        System.out.println("==============first passed.==================");
+        CompletableFuture.supplyAsync(() -> "welcome")
+                .thenAccept(s -> System.out.println(Thread.currentThread().getName() + ":" + s + " to beijing."));
+        System.out.println("==============second passed.==================");
+
+        CompletableFuture<Void> voidCompletableFuture3 = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(100L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return new BigDecimal("8.88");
+        }).thenAccept(d -> System.out.println(Thread.currentThread().getName() + ":I am a BigDecimal.=>" + d.toString()));
+        System.out.println("==============third passed.==================");
+
+        CompletableFuture.allOf(voidCompletableFuture, voidCompletableFuture3).join();
     }
 
     private static void thenApply() {
