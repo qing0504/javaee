@@ -26,5 +26,8 @@ public class DateTest {
 
         int expireSeconds = (int) TimeUnit.HOURS.toSeconds(2);
         System.out.println(expireSeconds);
+
+        Date longToDate = new Date(1528250400007L);
+        System.out.println(DateUtil.formatDateFull(longToDate));
     }
 }
