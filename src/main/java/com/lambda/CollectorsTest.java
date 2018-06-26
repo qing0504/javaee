@@ -41,8 +41,8 @@ public class CollectorsTest {
         System.out.println("==============My Collector=====================");
         // java8-tutorial  Streams10
         // 并行parallelism流
-//        Map<Long, String> map = accounts.parallelStream().collect(collector);
-        Map<Long, String> map = accounts.stream().collect(collector);
+       Map<Long, String> map = accounts.parallelStream().collect(collector);
+        // Map<Long, String> map = accounts.stream().collect(collector);
         map.forEach((k, v) -> System.out.println(k + " : " + v.toString()));
 
         System.out.println("==============equivalent to My Collector =====================");
