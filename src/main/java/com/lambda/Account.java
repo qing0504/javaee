@@ -2,6 +2,7 @@ package com.lambda;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
@@ -16,16 +17,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class Account extends SuperAccount {
     private Long id;
     private String userName;
 
     private static String[] USER_NAME_ARRAY = new String[]{"bob", "martin", "joe"};
-
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this);
-    }
 
     public static List<Account> build(int len) {
         List<Account> accountList = new ArrayList<>(len);
