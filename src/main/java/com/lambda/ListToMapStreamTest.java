@@ -1,5 +1,8 @@
 package com.lambda;
 
+import com.alibaba.fastjson.JSON;
+
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,23 @@ public class ListToMapStreamTest {
 
         System.out.println("===========getNameAccountMap3============");
         getNameAccountMap3(accounts).forEach((k, v) -> System.out.println(k + " : " + v.toString()));
+
+        Map<Long, Map<String, Account>> idMap = accounts.stream().collect(
+                Collectors.groupingBy(
+                        Account::getId,
+                        Collectors.mapping(Function.identity(), Collectors.toMap(t -> "A" + t.getId(), Function.identity()))
+                )
+        );
+
+        System.out.println(JSON.toJSONString(idMap));
+
+        Map<Long, List<Account>> idList = accounts.stream().collect(
+                Collectors.groupingBy(
+                        Account::getId,
+                        Collectors.mapping(Function.identity(), Collectors.toList())
+                )
+        );
+        System.out.println(JSON.toJSONString(idList));
     }
 
     /**
