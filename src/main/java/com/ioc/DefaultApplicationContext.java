@@ -4,6 +4,7 @@ import com.common.utils.PackageUtil;
 import com.common.utils.StringConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,12 +28,16 @@ public class DefaultApplicationContext implements ApplicationContext {
     public DefaultApplicationContext(String scanPackageLocation) {
         this.scanPackageLocation = scanPackageLocation;
         if (!isInit) {
-            loadDefinitions(scanPackageLocation);
+            loadBeanDefinitions(scanPackageLocation);
             isInit = true;
         }
     }
 
-    private synchronized void loadDefinitions(String scanPackageLocation) {
+    public String getScanPackageLocation() {
+        return scanPackageLocation;
+    }
+
+    private synchronized void loadBeanDefinitions(String scanPackageLocation) {
         List<Class<?>> classList = PackageUtil.getClass(scanPackageLocation, true);
         if (classList.size() > 0) {
             classList.stream().filter(c -> c.isAnnotationPresent(Component.class)).forEach(
@@ -49,10 +54,11 @@ public class DefaultApplicationContext implements ApplicationContext {
                         }
 
                         try {
-                            BeanDefinition beanDefinition = new BeanDefinition(beanName, component.scope(), clazz, clazz.newInstance());
+                            Object newInstance = clazz.newInstance();
+                            Object proxy = Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new ProxyInvocationHandler(newInstance));
+                            BeanDefinition beanDefinition = new BeanDefinition(beanName, component.scope(), clazz, proxy);
                             BEAN_NAME_MAP.put(beanName, beanDefinition);
                             BEAN_CLASS_MAP.put(clazz, beanDefinition);
-
                         } catch (InstantiationException e) {
                             e.printStackTrace();
                         } catch (IllegalAccessException e) {
@@ -66,7 +72,18 @@ public class DefaultApplicationContext implements ApplicationContext {
     @Override
     public Object getBean(String beanName) {
         if (BEAN_NAME_MAP.containsKey(beanName)) {
-            return BEAN_NAME_MAP.get(beanName).getTargetObj();
+            BeanDefinition beanDefinition = BEAN_NAME_MAP.get(beanName);
+            if (beanDefinition.isSingleton()) {
+                return beanDefinition.getTargetObj();
+            }
+
+            try {
+                return Proxy.newProxyInstance(beanDefinition.getClazz().getClassLoader(), beanDefinition.getClazz().getInterfaces(), new ProxyInvocationHandler(beanDefinition.getClazz().newInstance()));
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
 
         throw new RuntimeException("no such beanName BeanDefinition.beanName：" + beanName);
@@ -75,7 +92,18 @@ public class DefaultApplicationContext implements ApplicationContext {
     @Override
     public <T> T getBean(Class<T> t) {
         if (BEAN_CLASS_MAP.containsKey(t)) {
-            return (T) BEAN_CLASS_MAP.get(t).getTargetObj();
+            BeanDefinition beanDefinition = BEAN_CLASS_MAP.get(t);
+            if (beanDefinition.isSingleton()) {
+                return (T) beanDefinition.getTargetObj();
+            }
+
+            try {
+                return (T) Proxy.newProxyInstance(beanDefinition.getClazz().getClassLoader(), beanDefinition.getClazz().getInterfaces(), new ProxyInvocationHandler(beanDefinition.getClazz().newInstance()));
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
 
         throw new RuntimeException("no such beanClass BeanDefinition.beanClass:" + t);

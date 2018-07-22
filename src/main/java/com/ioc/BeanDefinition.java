@@ -21,7 +21,7 @@ public class BeanDefinition {
     }
 
     public boolean isSingleton() {
-        if ("singleton".equals(this.beanName)) {
+        if ("singleton".equals(this.scope)) {
             return true;
         }
 
