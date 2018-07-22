@@ -1,5 +1,7 @@
 package com.ioc;
 
+import com.ioc.support.Component;
+
 /**
  * @author wanchongyang
  * @date 2018/7/21

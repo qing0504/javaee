@@ -1,6 +1,8 @@
 package com.ioc;
 
 import com.ioc.impl.EnterpriseServiceImpl;
+import com.ioc.support.ApplicationContext;
+import com.ioc.support.DefaultApplicationContext;
 
 /**
  * @author wanchongyang
@@ -8,19 +10,19 @@ import com.ioc.impl.EnterpriseServiceImpl;
  */
 public class IOCTest {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = new DefaultApplicationContext();
-        UserService userService = (UserService) applicationContext.getBean("userService");
-        UserService userService2 = applicationContext.getBean(UserServiceImpl.class);
+        ApplicationContext applicationContext = new DefaultApplicationContext("com.ioc");
+        UserService userServiceByName = (UserService) applicationContext.getBean("userService");
+        UserService userServiceByClazz = applicationContext.getBean(UserServiceImpl.class);
         System.out.println("====================singleton===========================");
-        System.out.println("userService == userService2:" + (userService == userService2));
-        userService.study();
-        userService2.study();
+        System.out.println("userServiceByName == userServiceByClazz:" + (userServiceByName == userServiceByClazz));
+        userServiceByName.study();
+        userServiceByClazz.study();
         System.out.println("====================prototype===========================");
-        EnterpriseService enterpriseService = (EnterpriseService) applicationContext.getBean("enterpriseServiceImpl");
-        EnterpriseService enterpriseService2 = applicationContext.getBean(EnterpriseServiceImpl.class);
-        System.out.println("enterpriseService == enterpriseService2:" + (enterpriseService == enterpriseService2));
-        enterpriseService.manage();
-        enterpriseService2.manage();
+        EnterpriseService enterpriseServiceByName = (EnterpriseService) applicationContext.getBean("enterpriseServiceImpl");
+        EnterpriseService enterpriseServiceByClazz = applicationContext.getBean(EnterpriseServiceImpl.class);
+        System.out.println("enterpriseServiceByName == enterpriseServiceByClazz:" + (enterpriseServiceByName == enterpriseServiceByClazz));
+        enterpriseServiceByName.manage();
+        enterpriseServiceByClazz.manage();
         System.out.println("=========================================================");
     }
 }

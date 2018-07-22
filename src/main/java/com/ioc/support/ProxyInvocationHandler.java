@@ -1,4 +1,4 @@
-package com.ioc;
+package com.ioc.support;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

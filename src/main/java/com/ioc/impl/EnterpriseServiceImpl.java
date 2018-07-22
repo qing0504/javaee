@@ -1,6 +1,6 @@
 package com.ioc.impl;
 
-import com.ioc.Component;
+import com.ioc.support.Component;
 import com.ioc.EnterpriseService;
 
 /**
