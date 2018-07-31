@@ -1,4 +1,4 @@
-package com.thread.executor;
+package com.thread.executor.support;
 
 import java.util.concurrent.*;
 
@@ -11,11 +11,11 @@ public class AsyncExecutor extends ThreadPoolExecutor{
     private AsyncExecutor() {
         super(Runtime.getRuntime().availableProcessors() * 10,
                 500,
-                1L,
-                TimeUnit.MINUTES,
+                60L,
+                TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(1000),
-                new CustomThreadFactory("MyAsync"),
-                (r, e) -> System.out.println("active count:" + e.getActiveCount()));
+                new CustomThreadFactory("default"),
+                (r, e) -> System.out.println("active count:" + e.getActiveCount() + "Executor:" + e.toString()));
     }
 
     public static AsyncExecutor instance() {

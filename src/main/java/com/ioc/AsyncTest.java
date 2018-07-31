@@ -1,0 +1,41 @@
+package com.ioc;
+
+import com.common.utils.ConcurrentUtils;
+import com.ioc.support.ApplicationContext;
+import com.ioc.support.DefaultApplicationContext;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+/**
+ * @author wanchongyang
+ * @date 2018/7/31 下午6:00
+ */
+public class AsyncTest {
+    public static void main(String[] args) {
+        ApplicationContext applicationContext = new DefaultApplicationContext("com.ioc");
+        DepartmentService departmentService = (DepartmentService) applicationContext.getBean("departmentService");
+        System.out.println("==============print==================");
+        departmentService.print();
+        System.out.println("================getName================");
+        Object name = departmentService.getName();
+        System.out.println(name);
+        System.out.println("================getTitle================");
+        Future<String> future = departmentService.getTitle();
+        while (true) {
+            if (future.isDone()) {
+                try {
+                    System.out.println(future.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        System.out.println("================================");
+        ConcurrentUtils.sleep(1);
+        System.out.println("it is over.");
+    }
+}

@@ -1,7 +1,7 @@
 package com.limiter;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.thread.executor.CustomThreadFactory;
+import com.thread.executor.support.CustomThreadFactory;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
