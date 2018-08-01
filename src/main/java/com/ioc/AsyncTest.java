@@ -34,6 +34,8 @@ public class AsyncTest {
                 break;
             }
         }
+        System.out.println("================calculate================");
+        departmentService.calculate(3, 9);
         System.out.println("================================");
         ConcurrentUtils.sleep(1);
         System.out.println("it is over.");

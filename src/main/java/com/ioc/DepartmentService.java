@@ -12,4 +12,6 @@ public interface DepartmentService {
     String getName();
 
     Future<String> getTitle();
+
+    int calculate(int a, int b);
 }

@@ -33,4 +33,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         String obj = "my title is GAT.";
         return new AsyncResult<>(obj);
     }
+
+    @Async("fixedTaskExecutor")
+    @Override
+    public int calculate(int a, int b) {
+        System.out.println(Thread.currentThread().getName() + " calculate() async execution.");
+        int c = 1/0;
+        return a*b;
+    }
 }
