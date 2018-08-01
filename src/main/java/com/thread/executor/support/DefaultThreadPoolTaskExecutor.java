@@ -1,5 +1,7 @@
 package com.thread.executor.support;
 
+import com.ioc.support.Component;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -7,6 +9,7 @@ import java.util.concurrent.Future;
  * @author wanchongyang
  * @date 2018/7/31 下午3:49
  */
+@Component
 public class DefaultThreadPoolTaskExecutor extends AbstractThreadPoolTaskExecutor implements AsyncTaskExecutor {
     public DefaultThreadPoolTaskExecutor() {
         register(this);

@@ -10,7 +10,7 @@ import com.ioc.support.DefaultApplicationContext;
  */
 public class IOCTest {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = new DefaultApplicationContext("com.ioc");
+        ApplicationContext applicationContext = new DefaultApplicationContext(new String[] {"com.ioc"});
         UserService userServiceByName = (UserService) applicationContext.getBean("userService");
         UserService userServiceByClazz = applicationContext.getBean(UserServiceImpl.class);
         System.out.println("====================singleton===========================");

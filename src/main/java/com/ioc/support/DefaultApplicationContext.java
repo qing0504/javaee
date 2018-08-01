@@ -5,7 +5,9 @@ import com.common.utils.StringConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,24 +18,26 @@ public class DefaultApplicationContext implements ApplicationContext {
     private static final ConcurrentHashMap<String, BeanDefinition> BEAN_NAME_MAP = new ConcurrentHashMap(16);
     private static final ConcurrentHashMap<Class<?>, BeanDefinition> BEAN_CLASS_MAP = new ConcurrentHashMap(16);
 
-    private String scanPackageLocation;
+    private String[] scanPackageLocation;
 
     private static boolean isInit = false;
 
     public DefaultApplicationContext() {
         // 默认扫描当前包
-        this(DefaultApplicationContext.class.getPackage().getName());
+        this(new String[] {DefaultApplicationContext.class.getPackage().getName()});
     }
 
-    public DefaultApplicationContext(String scanPackageLocation) {
+    public DefaultApplicationContext(String[] scanPackageLocation) {
+        Objects.requireNonNull(scanPackageLocation);
+
         this.scanPackageLocation = scanPackageLocation;
         if (!isInit) {
-            loadBeanDefinitions(scanPackageLocation);
+            Arrays.stream(scanPackageLocation).forEach(s -> loadBeanDefinitions(s));
             isInit = true;
         }
     }
 
-    public String getScanPackageLocation() {
+    public String[] getScanPackageLocation() {
         return scanPackageLocation;
     }
 

@@ -13,12 +13,12 @@ import java.util.concurrent.Future;
  */
 public class AsyncTest {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = new DefaultApplicationContext("com.ioc");
+        ApplicationContext applicationContext = new DefaultApplicationContext(new String[]{"com.ioc", "com.thread.executor"});
         DepartmentService departmentService = (DepartmentService) applicationContext.getBean("departmentService");
         System.out.println("==============print==================");
         departmentService.print();
         System.out.println("================getName================");
-        Object name = departmentService.getName();
+        String name = departmentService.getName();
         System.out.println(name);
         System.out.println("================getTitle================");
         Future<String> future = departmentService.getTitle();

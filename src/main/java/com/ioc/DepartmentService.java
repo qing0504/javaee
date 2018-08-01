@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
 public interface DepartmentService {
     void print();
 
-    Object getName();
+    String getName();
 
     Future<String> getTitle();
 }

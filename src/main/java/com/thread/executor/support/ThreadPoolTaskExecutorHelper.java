@@ -1,5 +1,7 @@
 package com.thread.executor.support;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author wanchongyang
  * @date 2018/7/31 下午4:43
@@ -14,10 +16,7 @@ public class ThreadPoolTaskExecutorHelper extends AbstractThreadPoolTaskExecutor
         private static ThreadPoolTaskExecutorHelper INSTANCE = new ThreadPoolTaskExecutorHelper();
     }
 
-    static {
-        new DefaultThreadPoolTaskExecutor();
-        new FixedThreadPoolTaskExecutor();
-    }
+    private ThreadPoolTaskExecutorHelper() {}
 
     @Override
     protected String getName() {
@@ -25,7 +24,16 @@ public class ThreadPoolTaskExecutorHelper extends AbstractThreadPoolTaskExecutor
     }
 
     public AsyncTaskExecutor get(String key) {
-        return ThreadPoolTaskExecutorHelper.instance().getInstance(key);
+        if (StringUtils.isBlank(key)) {
+            return ThreadPoolTaskExecutorHelper.instance().getInstance(DEFAULT_TASK_EXECUTOR);
+        }
+
+        AsyncTaskExecutor asyncTaskExecutor = ThreadPoolTaskExecutorHelper.instance().getInstance(key);
+        if (asyncTaskExecutor != null) {
+            return asyncTaskExecutor;
+        }
+
+        return ThreadPoolTaskExecutorHelper.instance().getInstance(DEFAULT_TASK_EXECUTOR);
     }
 
 }

@@ -9,17 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2018/7/31 下午7:01
  */
 public class MethodCacheHolder {
-    private static final Map<Class<?>, Method> METHOD_CACHE_MAP = new ConcurrentHashMap<>(16);
+    private static final Map<String, Method> METHOD_CACHE_MAP = new ConcurrentHashMap<>(16);
 
     private MethodCacheHolder() {
 
     }
 
-    public static void put(Class<?> clazz, Method method) {
-        METHOD_CACHE_MAP.putIfAbsent(clazz, method);
+    public static void put(String methodName, Method method) {
+        METHOD_CACHE_MAP.putIfAbsent(methodName, method);
     }
 
-    public static Method get(Class<?> methodClass) {
-        return METHOD_CACHE_MAP.get(methodClass);
+    public static Method get(String methodName) {
+        return METHOD_CACHE_MAP.get(methodName);
     }
 }

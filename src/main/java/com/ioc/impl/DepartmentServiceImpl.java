@@ -21,7 +21,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Async("fixedTaskExecutor")
     @Override
-    public Object getName() {
+    public String getName() {
         System.out.println(Thread.currentThread().getName() + " getName() async execution.");
         return "my name is development.";
     }
