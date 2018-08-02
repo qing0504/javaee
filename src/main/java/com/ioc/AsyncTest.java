@@ -17,6 +17,7 @@ public class AsyncTest {
         DepartmentService departmentService = (DepartmentService) applicationContext.getBean("departmentService");
         System.out.println("==============print==================");
         departmentService.print();
+        departmentService.print("Hello World.");
         System.out.println("================getName================");
         String name = departmentService.getName();
         System.out.println(name);

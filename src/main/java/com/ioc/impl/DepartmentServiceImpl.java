@@ -19,6 +19,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         System.out.println(Thread.currentThread().getName() + " print() async execution.");
     }
 
+    @Override
+    public void print(String message) {
+        System.out.println(Thread.currentThread().getName() + " " + message);
+    }
+
     @Async("fixedTaskExecutor")
     @Override
     public String getName() {

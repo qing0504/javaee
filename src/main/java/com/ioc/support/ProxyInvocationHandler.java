@@ -1,18 +1,11 @@
 package com.ioc.support;
 
 import com.thread.executor.support.*;
-import org.apache.commons.lang3.StringUtils;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.MethodDescriptor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 /**
  * @author wanchongyang
@@ -29,12 +22,13 @@ public class ProxyInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object result = null;
         System.out.println(method.getName() + " is invoked. begin");
-        Method realMethod = MethodCacheHolder.get(method.getName());
         Class<?> targetClass = this.target.getClass();
+        String key = method.toGenericString();
+        Method realMethod = MethodCacheHolder.get(key);
         if (realMethod == null) {
             realMethod = targetClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
 
-            MethodCacheHolder.put(targetClass.getName() + "_" + method.getName(), realMethod);
+            MethodCacheHolder.put(key, realMethod);
         }
 
         Async async = realMethod.getAnnotation(Async.class);

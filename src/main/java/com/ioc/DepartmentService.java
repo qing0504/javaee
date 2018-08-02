@@ -9,6 +9,8 @@ import java.util.concurrent.Future;
 public interface DepartmentService {
     void print();
 
+    void print(String message);
+
     String getName();
 
     Future<String> getTitle();
