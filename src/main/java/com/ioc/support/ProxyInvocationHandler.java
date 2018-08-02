@@ -32,8 +32,7 @@ public class ProxyInvocationHandler implements InvocationHandler {
         Method realMethod = MethodCacheHolder.get(method.getName());
         Class<?> targetClass = this.target.getClass();
         if (realMethod == null) {
-            Optional<Method> first = Arrays.stream(targetClass.getDeclaredMethods()).filter(m -> method.getName().equals(m.getName())).findFirst();
-            realMethod = first.get();
+            realMethod = targetClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
 
             MethodCacheHolder.put(targetClass.getName() + "_" + method.getName(), realMethod);
         }
