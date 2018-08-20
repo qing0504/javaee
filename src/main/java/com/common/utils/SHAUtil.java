@@ -1,0 +1,115 @@
+package com.common.utils;
+
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * @author wanchongyang
+ * @date 2018/8/15 下午3:16
+ */
+public class SHAUtil {
+    private static final String APPSECREP = "f4cc82386a1cdddcc98e4f53b1115a62";
+
+    public static String getSha1(String str) {
+        if (str == null || str.length() == 0) {
+            return null;
+        }
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+        try {
+            MessageDigest mdTemp = MessageDigest.getInstance("SHA1");
+            mdTemp.update(str.getBytes("UTF-8"));
+            byte[] md = mdTemp.digest();
+            int j = md.length;
+            char buf[] = new char[j * 2];
+            int k = 0;
+            for (int i = 0; i < j; i++) {
+                byte byteO = md[i];
+                buf[k++] = hexDigits[byteO >>> 4 & 0xf];
+                buf[k++] = hexDigits[byteO & 0xf];
+            }
+            return new String(buf);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    public static String getSha1EncodeStr(String str) {
+        return DigestUtils.sha1Hex(str);
+    }
+
+    private static String createSIGN(TreeMap<String, Object> signMap) {
+        signMap.put("appsecret", APPSECREP);
+        StringBuffer stringBuffer = new StringBuffer();
+        for (Map.Entry<String, Object> entry : signMap.entrySet()) {
+            if (entry.getValue() != null && StringUtils.isNoneBlank(entry.getValue().toString())) {
+                stringBuffer.append(entry.getKey().trim());
+                stringBuffer.append("=");
+                stringBuffer.append(entry.getValue().toString().trim());
+                stringBuffer.append("&");
+            }
+        }
+        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+        // return SHAUtil.getSha1(stringBuffer.toString()).toLowerCase();
+        return SHAUtil.getSha1EncodeStr(stringBuffer.toString()).toLowerCase();
+    }
+
+    public static void main(String[] args) {
+        testRecharge();
+
+        System.out.println("===========================");
+
+        testQuery();
+    }
+
+    private static void testQuery() {
+        Map<String, Object> params = new HashMap<>(16);
+        params.put("rechargeNo", "pro1534411299851");
+        params.put("outerTradeNo", "10000001_NO00000000000000002");
+        // params.put("outerTradeNo", "10000001_NO00000000000000001");
+
+        long timestamp = System.currentTimeMillis() / 1000;
+        String dataStr = JSON.toJSONString(params);
+        TreeMap<String, Object> treeMap = new TreeMap<>();
+        treeMap.put("data", dataStr);
+        treeMap.put("timestamp", timestamp);
+
+        String sign = createSIGN(treeMap);
+        System.out.println("data:" + dataStr);
+        System.out.println("timestamp:" + timestamp);
+        System.out.println("sign:" + sign);
+    }
+
+    private static void testRecharge() {
+        Map<String, Object> params = new HashMap<>(16);
+        params.put("name", "张三");
+        params.put("idNumber", "412826198808158031");
+        params.put("cardNumber", "90001123334890849");
+        params.put("money", new BigDecimal(50.00));
+        params.put("rechargeFlag", 1);
+        params.put("outerTradeNo", "10000001_NO00000000000000002");
+
+        long timestamp = System.currentTimeMillis() / 1000;
+        String dataStr = JSON.toJSONString(params);
+        TreeMap<String, Object> treeMap = new TreeMap<>();
+        treeMap.put("data", dataStr);
+        treeMap.put("timestamp", timestamp);
+
+        String sign = createSIGN(treeMap);
+        System.out.println("data:" + dataStr);
+        System.out.println("timestamp:" + timestamp);
+        System.out.println("sign:" + sign);
+    }
+
+}
