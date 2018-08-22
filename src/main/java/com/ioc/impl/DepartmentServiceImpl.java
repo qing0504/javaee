@@ -1,6 +1,5 @@
 package com.ioc.impl;
 
-import com.common.utils.ConcurrentUtils;
 import com.ioc.DepartmentService;
 import com.ioc.support.Component;
 import com.thread.executor.support.Async;
