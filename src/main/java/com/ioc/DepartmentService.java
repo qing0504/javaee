@@ -15,5 +15,5 @@ public interface DepartmentService {
 
     Future<String> getTitle();
 
-    int calculate(int a, int b);
+    Future<Integer> calculate(int a, int b);
 }

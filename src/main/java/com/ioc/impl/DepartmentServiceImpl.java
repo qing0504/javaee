@@ -1,5 +1,6 @@
 package com.ioc.impl;
 
+import com.common.utils.ConcurrentUtils;
 import com.ioc.DepartmentService;
 import com.ioc.support.Component;
 import com.thread.executor.support.Async;
@@ -16,6 +17,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Async
     @Override
     public void print() {
+        Integer num = null;
+        int numInt = num;
         System.out.println(Thread.currentThread().getName() + " print() async execution.");
     }
 
@@ -41,9 +44,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Async("fixedTaskExecutor")
     @Override
-    public int calculate(int a, int b) {
+    public Future<Integer> calculate(int a, int b) {
         System.out.println(Thread.currentThread().getName() + " calculate() async execution.");
         int c = 1/0;
-        return a*b;
+        return new AsyncResult<>(a*b);
     }
 }

@@ -18,9 +18,11 @@ public class AsyncTest {
         System.out.println("==============print==================");
         departmentService.print();
         departmentService.print("Hello World.");
+        ConcurrentUtils.sleep(1);
         System.out.println("================getName================");
         String name = departmentService.getName();
         System.out.println(name);
+        ConcurrentUtils.sleep(1);
         System.out.println("================getTitle================");
         Future<String> future = departmentService.getTitle();
         while (true) {
@@ -37,8 +39,8 @@ public class AsyncTest {
         }
         System.out.println("================calculate================");
         departmentService.calculate(3, 9);
-        System.out.println("================================");
         ConcurrentUtils.sleep(1);
+        System.out.println("================================");
         System.out.println("it is over.");
     }
 }

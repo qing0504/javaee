@@ -25,6 +25,7 @@ public class UncaughtExceptionHandlerTest {
         System.out.println("==========submit============");
         Future<Integer> future = AsyncExecutor.instance().submit(() -> {
             System.out.println("wow wow.");
+            ConcurrentUtils.sleep(1);
             Integer num = null;
             int j = num.intValue();
             return j;
@@ -35,8 +36,7 @@ public class UncaughtExceptionHandlerTest {
                 try {
                     System.out.println(future.get());
                 } catch (InterruptedException | ExecutionException e) {
-                    System.err.println(e.getClass());
-                    System.err.println("Exception: " + e.getMessage());
+                    System.err.println(e.getClass() + ", Exception: " + e.getMessage());
                 }
 
                 break;
