@@ -14,6 +14,7 @@ public class FileSystemClassLoader extends ClassLoader {
         this.rootDir = rootDir;
     }
 
+    @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         byte[] classData = getClassData(name);
         if (classData == null) {
