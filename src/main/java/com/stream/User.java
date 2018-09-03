@@ -28,7 +28,7 @@ public class User implements Serializable {
 
     public static List<User> buildList(int len) {
         if (len < 1) {
-            throw new IllegalArgumentException("param is greater than 0.");
+            throw new IllegalArgumentException("The parameter must be greater than 0.");
         }
 
         List<User> list = new ArrayList<>();
