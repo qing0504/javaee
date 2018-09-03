@@ -50,9 +50,27 @@ public class SHAUtil {
     }
 
     private static String createSIGN(TreeMap<String, Object> signMap) {
-        signMap.put("appsecret", APPSECREP);
+        String queryString = getQueryString(signMap);
+
+        System.out.println("query:" + queryString);
+        // return SHAUtil.getSha1(queryString).toLowerCase();
+        return SHAUtil.getSha1EncodeStr(queryString).toLowerCase();
+    }
+
+    /**
+     * 拼接字符串
+     *
+     * @param params 参数map
+     * @return 拼接后字符串
+     */
+    private static String getQueryString(TreeMap<String, Object> params) {
+        if (params == null || params.size() == 0) {
+            return "";
+        }
+
+        params.put("appsecret", APPSECREP);
         StringBuffer stringBuffer = new StringBuffer();
-        for (Map.Entry<String, Object> entry : signMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getValue() != null && StringUtils.isNoneBlank(entry.getValue().toString())) {
                 stringBuffer.append(entry.getKey().trim());
                 stringBuffer.append("=");
@@ -60,17 +78,30 @@ public class SHAUtil {
                 stringBuffer.append("&");
             }
         }
-        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-        // return SHAUtil.getSha1(stringBuffer.toString()).toLowerCase();
-        return SHAUtil.getSha1EncodeStr(stringBuffer.toString()).toLowerCase();
+
+        return stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
     }
 
     public static void main(String[] args) {
-        testRecharge();
+        testCreateSign();
 
-        System.out.println("===========================");
+        // testRecharge();
 
-        testQuery();
+        // System.out.println("===========================");
+
+        // testQuery();
+    }
+
+    private static void testCreateSign() {
+        long timestamp = System.currentTimeMillis() / 1000;
+        TreeMap<String, Object> treeMap = new TreeMap<>();
+        treeMap.put("grant_type", "client_credential");
+        treeMap.put("appid", 30000003);
+        treeMap.put("timestamp", timestamp);
+
+        String sign = createSIGN(treeMap);
+        System.out.println("timestamp:" + timestamp);
+        System.out.println("sign:" + sign);
     }
 
     private static void testQuery() {

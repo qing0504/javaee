@@ -25,6 +25,7 @@ public class AsyncTest {
         ConcurrentUtils.sleep(1);
         System.out.println("================getTitle================");
         Future<String> future = departmentService.getTitle();
+        System.out.println("main future:" + future);
         while (true) {
             if (future.isDone()) {
                 try {

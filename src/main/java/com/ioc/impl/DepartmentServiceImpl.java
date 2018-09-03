@@ -38,7 +38,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Future<String> getTitle() {
         System.out.println(Thread.currentThread().getName() + " getTitle() async execution.");
         String obj = "my title is GAT.";
-        return new AsyncResult<>(obj);
+        AsyncResult<String> result = new AsyncResult<>(obj);
+        System.out.println("async result:" + result);
+        return result;
     }
 
     @Async("fixedTaskExecutor")
