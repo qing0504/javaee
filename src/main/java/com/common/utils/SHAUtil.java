@@ -17,7 +17,7 @@ import java.util.TreeMap;
  * @date 2018/8/15 下午3:16
  */
 public class SHAUtil {
-    private static final String APPSECREP = "f4cc82386a1cdddcc98e4f53b1115a62";
+    private static final String APPSECRET = "f4cc82386a1cdddcc98e4f53b1115a62";
 
     public static String getSha1(String str) {
         if (str == null || str.length() == 0) {
@@ -50,7 +50,11 @@ public class SHAUtil {
     }
 
     private static String createSIGN(TreeMap<String, Object> signMap) {
-        String queryString = getQueryString(signMap);
+        return createSIGN(signMap, APPSECRET);
+    }
+
+    private static String createSIGN(TreeMap<String, Object> signMap, String appSecret) {
+        String queryString = getQueryString(signMap, appSecret);
 
         System.out.println("query:" + queryString);
         // return SHAUtil.getSha1(queryString).toLowerCase();
@@ -61,14 +65,15 @@ public class SHAUtil {
      * 拼接字符串
      *
      * @param params 参数map
+     * @param appSecret 签名密钥
      * @return 拼接后字符串
      */
-    private static String getQueryString(TreeMap<String, Object> params) {
+    private static String getQueryString(TreeMap<String, Object> params, String appSecret) {
         if (params == null || params.size() == 0) {
             return "";
         }
 
-        params.put("appsecret", APPSECREP);
+        params.put("appsecret", appSecret);
         StringBuffer stringBuffer = new StringBuffer();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getValue() != null && StringUtils.isNoneBlank(entry.getValue().toString())) {
@@ -95,11 +100,12 @@ public class SHAUtil {
     private static void testCreateSign() {
         long timestamp = System.currentTimeMillis() / 1000;
         TreeMap<String, Object> treeMap = new TreeMap<>();
-        treeMap.put("grant_type", "client_credential");
-        treeMap.put("appid", 30000003);
+        treeMap.put("appid", 20110724);
+        // treeMap.put("appsecret", "09c45b61c2fb25504317006e9f810385");
+        treeMap.put("orderNo", "DD1510221610171546");
         treeMap.put("timestamp", timestamp);
 
-        String sign = createSIGN(treeMap);
+        String sign = createSIGN(treeMap, "09c45b61c2fb25504317006e9f810385");
         System.out.println("timestamp:" + timestamp);
         System.out.println("sign:" + sign);
     }
