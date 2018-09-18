@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +24,10 @@ public class AESUtil {
      * 默认加密算法
      */
     private static final String DEFAULT_CIPHER_ALGORITHM = "AES";
+    /**
+     * AES密钥加盐
+     */
+    private static final String SECURE_KEY = "76edd483-1117-421b-be56-8eff3ee7bc95";
 
     /**
      * AES 加密操作
@@ -110,7 +115,7 @@ public class AESUtil {
     }
 
     public static void main(String[] args) {
-        String secureKey = "123456";
+        String secureKey = SECURE_KEY + "123456";
         String content = "{'couponId':28840953,'resourcesId':610,'resourcesType':1,'sourceType':'coupon','timestamp':1537182594}";
         String cipherText = AESUtil.encrypt(content, secureKey);
         System.out.println(cipherText);
