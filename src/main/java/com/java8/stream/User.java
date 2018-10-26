@@ -44,7 +44,7 @@ public class User implements Serializable {
     }
 
     public static void main(String[] args) {
-        // List<User> => List<String>()
+        // List<User.name> => List<String>()
         List<User> userList = buildList(5);
         userList.stream().forEach(System.out::println);
 
@@ -54,6 +54,6 @@ public class User implements Serializable {
             return n1;
         });
 
-        System.out.println(reduce);
+        reduce.stream().forEach(System.out::println);
     }
 }
