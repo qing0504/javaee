@@ -49,11 +49,9 @@ public class User implements Serializable {
         userList.stream().forEach(System.out::println);
 
         System.out.println("=========================");
-        List<String> reduce = userList.stream().map(u -> u.getName()).reduce(new ArrayList<>(), (n1, n2) -> {
+        userList.stream().map(User::getName).reduce(new ArrayList<>(), (n1, n2) -> {
             n1.add(StringUtils.join(n2.toArray(), ","));
             return n1;
-        });
-
-        reduce.stream().forEach(System.out::println);
+        }).forEach(System.out::println);
     }
 }
