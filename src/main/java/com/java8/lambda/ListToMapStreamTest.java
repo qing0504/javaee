@@ -1,10 +1,10 @@
 package com.java8.lambda;
 
 import com.alibaba.fastjson.JSON;
+import com.java8.stream.User;
+import com.pattern.adapter.Source;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,8 +18,16 @@ public class ListToMapStreamTest {
         List<Account> accounts = Account.build(10);
         accounts.forEach(Account::print);
 
+        System.out.println("===========subAccountList============");
+        List<Account> subAccountList = accounts.stream().map(a -> {
+            SubAccount subAccount = new SubAccount();
+            subAccount.setSubName("sub " + a.getUserName());
+            return subAccount;
+        }).collect(Collectors.toList());
+        subAccountList.stream().forEach(System.out::println);
+
         System.out.println("===========getIdNameMap============");
-        getIdNameMap(accounts).forEach((k, v) -> System.out.println(k + " : " + v.toString()));
+        getIdNameMap(accounts).forEach((k, v) -> System.out.println(k + " : " + v));
 
         System.out.println("===========getIdAccountMap============");
         getIdAccountMap(accounts).forEach((k, v) -> System.out.println(k + " : " + v.toString()));
