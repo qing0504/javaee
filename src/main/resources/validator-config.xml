@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validators>
+    <!-- 正整数验证 -->
+    <validator category="basic" type="IntRange" msg="非法数值">
+        <property min="-1" max="999"/>
+    </validator>
+
+    <!-- 邮箱验证 -->
+    <validator category="basic" type="Email" />
+
+    <!-- 正则验证 -->
+    <validator category="basic" type="Regex" msg="验证不匹配">
+        <property regex="^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$" />
+    </validator>
+</validators>
