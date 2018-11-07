@@ -12,6 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractValidatorParser {
     private static ConcurrentHashMap<String, ValidatorParser> validatorParserCache = new ConcurrentHashMap<>(64);
 
+    static {
+        new IntRangeValidatorParser();
+        new EmailValidatorParser();
+        new RegexValidatorParser();
+    }
+
     public void register(String type, ValidatorParser validatorParser) {
         validatorParserCache.putIfAbsent(type, validatorParser);
     }

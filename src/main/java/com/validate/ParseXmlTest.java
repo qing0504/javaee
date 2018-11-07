@@ -1,5 +1,6 @@
 package com.validate;
 
+import com.validate.support.DefaultValidatorChainFactory;
 import com.validate.support.ValidatorChain;
 import com.validate.support.ValidatorChainFactory;
 import org.dom4j.Attribute;
@@ -18,6 +19,8 @@ import java.util.List;
  */
 public class ParseXmlTest {
     private static final String PARA_NAME = "IMPORT_PARA_TEST";
+    private static final String VARIABLE_NAME = "personCode";
+
     public static void main(String[] args) throws DocumentException {
         InputStream inputStream = ParseXmlTest.class.getClassLoader().getResourceAsStream("validator-config.xml");
         SAXReader reader = new SAXReader();
@@ -25,9 +28,10 @@ public class ParseXmlTest {
         Element root = document.getRootElement();
         // parse(root);
 
-        ValidatorChain chain = ValidatorChainFactory.getChain(PARA_NAME, root);
+        ValidatorChainFactory validatorChainFactory = new DefaultValidatorChainFactory();
+        ValidatorChain chain = validatorChainFactory.getChain(PARA_NAME, VARIABLE_NAME, root);
         System.out.println(chain);
-        System.out.println(ValidatorChainFactory.getChain(PARA_NAME));
+        System.out.println(validatorChainFactory.getChain(PARA_NAME, VARIABLE_NAME));
 
     }
 
