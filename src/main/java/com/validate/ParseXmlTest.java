@@ -1,7 +1,7 @@
 package com.validate;
 
 import com.validate.support.ValidatorChain;
-import com.validate.support.ValidatorParserHelper;
+import com.validate.support.ValidatorChainFactory;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -25,9 +25,9 @@ public class ParseXmlTest {
         Element root = document.getRootElement();
         // parse(root);
 
-        ValidatorChain chain = ValidatorParserHelper.getChain(PARA_NAME, root);
+        ValidatorChain chain = ValidatorChainFactory.getChain(PARA_NAME, root);
         System.out.println(chain);
-        System.out.println(ValidatorParserHelper.getChain(PARA_NAME));
+        System.out.println(ValidatorChainFactory.getChain(PARA_NAME));
 
     }
 

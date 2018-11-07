@@ -11,10 +11,13 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * ValidatorChain 工厂类
+ *
+ * @see com.validate.support.ValidatorChain
  * @author wanchongyang
  * @date 2018/11/6 5:03 PM
  */
-public class ValidatorParserHelper extends AbstractValidatorParser {
+public class ValidatorChainFactory extends AbstractValidatorParser {
     private static ConcurrentHashMap<String, ValidatorChain> validatorChainCache = new ConcurrentHashMap<>(64);
 
     static {
