@@ -1,5 +1,6 @@
 package com.validate.config;
 
+import com.validate.constant.ValidatorConstant;
 import com.validate.contract.EmailValidator;
 import com.validate.contract.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,7 @@ import java.util.Objects;
  */
 public class EmailValidatorParser extends AbstractValidatorParser implements ValidatorParser {
     public EmailValidatorParser() {
-        register("Email", this);
+        register(ValidatorConstant.VALIDATOR_TYPE_EMAIL, this);
     }
 
     @Override

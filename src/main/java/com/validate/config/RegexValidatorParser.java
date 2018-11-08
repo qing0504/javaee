@@ -1,5 +1,6 @@
 package com.validate.config;
 
+import com.validate.constant.ValidatorConstant;
 import com.validate.contract.RegexValidator;
 import com.validate.contract.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,7 @@ import java.util.Objects;
  */
 public class RegexValidatorParser extends AbstractValidatorParser implements ValidatorParser{
     public RegexValidatorParser() {
-        register("Regex", this);
+        register(ValidatorConstant.VALIDATOR_TYPE_REGEX, this);
     }
 
     @Override

@@ -18,15 +18,15 @@ public abstract class AbstractValidatorParser {
         new RegexValidatorParser();
     }
 
-    public void register(String type, ValidatorParser validatorParser) {
+    protected void register(String type, ValidatorParser validatorParser) {
         validatorParserCache.putIfAbsent(type, validatorParser);
     }
 
-    public static ValidatorParser get(String type) {
+    protected ValidatorParser get(String type) {
         return validatorParserCache.get(type);
     }
 
-    public static String getAttributeValue(String attributeName, Element element) {
+    protected String getAttributeValue(String attributeName, Element element) {
         Attribute attribute = element.attribute(attributeName);
         if (attribute != null) {
             return attribute.getValue();

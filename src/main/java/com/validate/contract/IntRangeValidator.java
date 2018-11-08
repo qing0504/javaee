@@ -4,7 +4,7 @@ import com.validate.constant.MessageConstant;
 import lombok.Data;
 
 /**
- * 正整数范围验证器对象
+ * 整数范围验证器对象
  * @author wanchongyang
  * @date 2018/11/6 1:56 PM
  */

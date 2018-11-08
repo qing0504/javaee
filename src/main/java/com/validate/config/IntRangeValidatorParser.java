@@ -1,6 +1,7 @@
 package com.validate.config;
 
 import com.common.utils.RegexUtil;
+import com.validate.constant.ValidatorConstant;
 import com.validate.contract.IntRangeValidator;
 import com.validate.contract.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,7 @@ import org.dom4j.Element;
  */
 public class IntRangeValidatorParser extends AbstractValidatorParser implements ValidatorParser{
     public IntRangeValidatorParser() {
-        register("IntRange", this);
+        register(ValidatorConstant.VALIDATOR_TYPE_INTRANGE, this);
     }
 
     @Override
