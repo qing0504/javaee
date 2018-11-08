@@ -1,33 +1,43 @@
 package com.validate;
 
-import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
+import com.validate.exception.BeanValidatorInstantiationException;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author wanchongyang
  * @date 2018/11/8 2:10 PM
  */
 public class BeanValidatorFactory {
+    private static final ConcurrentHashMap<String, Class<? extends BeanValidator>> clazzCache = new ConcurrentHashMap<>(64);
+
+    static {
+        register(ValidatorConstant.VALIDATOR_TYPE_REGEX, RegexBeanValidator.class);
+        register(ValidatorConstant.VALIDATOR_TYPE_INTRANGE, IntRangeBeanValidator.class);
+        register(ValidatorConstant.VALIDATOR_TYPE_EMAIL, EmailBeanValidator.class);
+    }
+    private BeanValidatorFactory() {
+
+    }
+
     public static BeanValidator newInstance(String type) {
-        if (ValidatorConstant.VALIDATOR_TYPE_EMAIL.equals(type)) {
-            MutableValidatorPropertyValues propertyValues = new MutableValidatorPropertyValues();
-            propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_CN_ATTRIBUTE, MessageConstant.EnumEmailValidator.CN.getErrorMsg());
-            propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_EN_ATTRIBUTE, MessageConstant.EnumEmailValidator.EN.getErrorMsg());
-            return new EmailBeanValidator(propertyValues);
-        } else if (ValidatorConstant.VALIDATOR_TYPE_INTRANGE.equals(type)) {
-            MutableValidatorPropertyValues propertyValues = new MutableValidatorPropertyValues();
-            propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_CN_ATTRIBUTE, MessageConstant.EnumIntRangeValidator.CN.getErrorMsg());
-            propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_EN_ATTRIBUTE, MessageConstant.EnumIntRangeValidator.EN.getErrorMsg());
-            propertyValues.addPropertyValue(new ValidatorPropertyValue(IntRangeBeanValidator.MIN_ATTRIBUTE, String.valueOf(Integer.MIN_VALUE)));
-            propertyValues.addPropertyValue(new ValidatorPropertyValue(IntRangeBeanValidator.MAX_ATTRIBUTE, String.valueOf(Integer.MAX_VALUE)));
-            return new IntRangeBeanValidator(propertyValues);
-        } else if (ValidatorConstant.VALIDATOR_TYPE_REGEX.equals(type)) {
-            MutableValidatorPropertyValues propertyValues = new MutableValidatorPropertyValues();
-            propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_CN_ATTRIBUTE, MessageConstant.EnumRegexValidator.CN.getErrorMsg());
-            propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_EN_ATTRIBUTE, MessageConstant.EnumRegexValidator.EN.getErrorMsg());
-            return new RegexBeanValidator(propertyValues);
+        if (!clazzCache.containsKey(type)) {
+            throw new IllegalArgumentException("illegal type " + type);
         }
 
-        throw new IllegalArgumentException("illegal type " + type);
+        return newInstance(clazzCache.get(type));
+    }
+
+    public static BeanValidator newInstance(Class<? extends BeanValidator> clazz) {
+        try {
+           return clazz.newInstance();
+        } catch (Exception e) {
+            throw new BeanValidatorInstantiationException("BeanValidator InstantiationException", e);
+        }
+    }
+
+    private static void register(String type, Class<? extends BeanValidator> clazz) {
+        clazzCache.putIfAbsent(type, clazz);
     }
 }

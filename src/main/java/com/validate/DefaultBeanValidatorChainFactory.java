@@ -6,8 +6,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.Optional;
-
 /**
  * @author wanchongyang
  * @date 2018/11/8 2:06 PM

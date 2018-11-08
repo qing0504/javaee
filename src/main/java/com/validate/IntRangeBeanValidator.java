@@ -1,6 +1,7 @@
 package com.validate;
 
 import com.common.utils.RegexUtil;
+import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
 import com.validate.exception.BeanValidatorMetadataException;
 
@@ -12,7 +13,12 @@ public class IntRangeBeanValidator extends AbstractBeanValidator {
     public static final String MIN_ATTRIBUTE = "min";
     public static final String MAX_ATTRIBUTE = "max";
 
-    public IntRangeBeanValidator(MutableValidatorPropertyValues propertyValues) {
+    public IntRangeBeanValidator() {
+        MutableValidatorPropertyValues propertyValues = new MutableValidatorPropertyValues();
+        propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_CN_ATTRIBUTE, MessageConstant.EnumIntRangeValidator.CN.getErrorMsg());
+        propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_EN_ATTRIBUTE, MessageConstant.EnumIntRangeValidator.EN.getErrorMsg());
+        propertyValues.addPropertyValue(new ValidatorPropertyValue(IntRangeBeanValidator.MIN_ATTRIBUTE, String.valueOf(Integer.MIN_VALUE)));
+        propertyValues.addPropertyValue(new ValidatorPropertyValue(IntRangeBeanValidator.MAX_ATTRIBUTE, String.valueOf(Integer.MAX_VALUE)));
         super.setPropertyValues(propertyValues);
     }
 

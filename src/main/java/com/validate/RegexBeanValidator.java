@@ -1,5 +1,6 @@
 package com.validate;
 
+import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
 import com.validate.exception.BeanValidatorMetadataException;
 
@@ -14,7 +15,10 @@ public class RegexBeanValidator extends AbstractBeanValidator {
 
     private Pattern pattern;
 
-    public RegexBeanValidator(MutableValidatorPropertyValues propertyValues) {
+    public RegexBeanValidator() {
+        MutableValidatorPropertyValues propertyValues = new MutableValidatorPropertyValues();
+        propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_CN_ATTRIBUTE, MessageConstant.EnumRegexValidator.CN.getErrorMsg());
+        propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_EN_ATTRIBUTE, MessageConstant.EnumRegexValidator.EN.getErrorMsg());
         super.setPropertyValues(propertyValues);
     }
 

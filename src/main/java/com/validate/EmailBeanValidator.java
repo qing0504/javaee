@@ -1,5 +1,6 @@
 package com.validate;
 
+import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
 
 /**
@@ -7,7 +8,10 @@ import com.validate.constant.ValidatorConstant;
  * @date 2018/11/8 10:45 AM
  */
 public class EmailBeanValidator extends AbstractBeanValidator {
-    public EmailBeanValidator(MutableValidatorPropertyValues propertyValues) {
+    public EmailBeanValidator() {
+        MutableValidatorPropertyValues propertyValues = new MutableValidatorPropertyValues();
+        propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_CN_ATTRIBUTE, MessageConstant.EnumEmailValidator.CN.getErrorMsg());
+        propertyValues.addPropertyValue(ValidatorConstant.ERROR_MSG_EN_ATTRIBUTE, MessageConstant.EnumEmailValidator.EN.getErrorMsg());
         super.setPropertyValues(propertyValues);
     }
 
