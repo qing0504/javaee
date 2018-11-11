@@ -30,10 +30,16 @@ public class W3cDomParseXmlTest {
             Document doc = db.parse(inputStream);
             Element root = doc.getDocumentElement();
 
-            BeanValidatorChainFactory chainFactory = new DefaultBeanValidatorChainFactory();
+            // 初始化
+            BeanValidatorChainFactory chainFactory = BeanValidatorChainFactorySingleton.getInstance();
             BeanValidatorChain chain = chainFactory.getChain(PARA_NAME, EMAIL_VARIABLE_NAME, root);
             System.out.println(chain);
             System.out.println(chainFactory.getChain(PARA_NAME, EMAIL_VARIABLE_NAME));
+
+            // clear
+            chainFactory.remove(PARA_NAME);
+            System.out.println(chainFactory.getChain(PARA_NAME, EMAIL_VARIABLE_NAME));
+
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {

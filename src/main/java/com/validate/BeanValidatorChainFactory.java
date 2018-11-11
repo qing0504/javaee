@@ -12,4 +12,8 @@ public interface BeanValidatorChainFactory {
     BeanValidatorChain getChain(String paraName, String variableName);
 
     BeanValidatorChain getChain(String paraName, String variableName, Element element);
+
+    void remove(String paraName);
+
+    void remove(String paraName, String variableName);
 }

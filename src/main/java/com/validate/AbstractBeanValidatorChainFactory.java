@@ -53,6 +53,16 @@ public abstract class AbstractBeanValidatorChainFactory implements BeanValidator
         return chain;
     }
 
+    @Override
+    public void remove(String paraName) {
+        validatorChainCache.keySet().stream().filter(k -> k.indexOf(paraName) > -1).forEach(k -> validatorChainCache.remove(k));
+    }
+
+    @Override
+    public void remove(String paraName, String variableName) {
+        validatorChainCache.remove(getKey(paraName, variableName));
+    }
+
     protected abstract BeanValidatorChain parse(Element element);
     protected abstract void preProcessXml(Element element);
     protected abstract void postProcessXml(Element element, BeanValidatorChain chain);
