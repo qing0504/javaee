@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <validators>
     <!-- 整数范围验证 -->
-    <validator type="IntRange" msg="非法数值">
+    <validator type="IntRange">
         <property name="min" value="-1"/>
         <property name="max" value="999"/>
     </validator>
 
     <!-- 邮箱验证 -->
-    <validator type="Email" />
+    <validator type="Email">
+        <property name="errorMsgCn" value="无效的邮箱地址"/>
+        <property name="errorMsgEn" value="Invalid email address"/>
+    </validator>
 
     <!-- 正则验证 -->
-    <validator type="Regex" msg="验证不匹配">
+    <validator type="Regex">
         <property name="regex" value="^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$" />
     </validator>
 </validators>

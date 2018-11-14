@@ -34,6 +34,7 @@ public class W3cDomParseXmlTest {
             BeanValidatorChainFactory chainFactory = BeanValidatorChainFactorySingleton.getInstance();
             BeanValidatorChain chain = chainFactory.getChain(PARA_NAME, EMAIL_VARIABLE_NAME, root);
             System.out.println(chain);
+            System.out.println(chainFactory.getChain(PARA_NAME));
             System.out.println(chainFactory.getChain(PARA_NAME, EMAIL_VARIABLE_NAME));
 
             // clear

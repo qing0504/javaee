@@ -9,9 +9,13 @@ import org.w3c.dom.Element;
  * @date 2018/11/6 5:03 PM
  */
 public interface BeanValidatorChainFactory {
+    BeanValidatorChain getChain(String paraName);
+
     BeanValidatorChain getChain(String paraName, String variableName);
 
     BeanValidatorChain getChain(String paraName, String variableName, Element element);
+
+    BeanValidatorChain getChain(String paraName, String variableName, String elementText);
 
     void remove(String paraName);
 

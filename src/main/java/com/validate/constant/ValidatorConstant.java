@@ -27,10 +27,12 @@ public class ValidatorConstant {
      * 错误信息中文属性名
      */
     public static final String ERROR_MSG_CN_ATTRIBUTE = "errorMsgCn";
+    public static final String CN = "cn";
     /**
      * 错误信息英文属性名
      */
     public static final String ERROR_MSG_EN_ATTRIBUTE = "errorMsgEn";
+    public static final String EN = "en";
 
     static {
         typeCache.add(VALIDATOR_TYPE_EMAIL);

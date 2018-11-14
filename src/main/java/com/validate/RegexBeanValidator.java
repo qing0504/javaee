@@ -3,6 +3,8 @@ package com.validate;
 import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
 import com.validate.exception.BeanValidatorMetadataException;
+import com.validate.handler.RegexValidateHandler;
+import com.validate.handler.ValidateHandler;
 
 import java.util.regex.Pattern;
 
@@ -34,6 +36,11 @@ public class RegexBeanValidator extends AbstractBeanValidator {
         }
 
         this.pattern = Pattern.compile(this.getPropertyValues().getPropertyValue(REGEX_ATTRIBUTE).getValue());
+    }
+
+    @Override
+    public ValidateHandler getHandler() {
+        return new RegexValidateHandler();
     }
 
     public Pattern getPattern() {

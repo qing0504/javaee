@@ -2,6 +2,8 @@ package com.validate;
 
 import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
+import com.validate.handler.EmailValidateHandler;
+import com.validate.handler.ValidateHandler;
 
 /**
  * @author wanchongyang
@@ -23,5 +25,10 @@ public class EmailBeanValidator extends AbstractBeanValidator {
     @Override
     public void doVerifyMetadata() {
 
+    }
+
+    @Override
+    public ValidateHandler getHandler() {
+        return new EmailValidateHandler();
     }
 }

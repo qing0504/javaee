@@ -2,10 +2,15 @@ package com.validate;
 
 
 import com.common.utils.StringUtil;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,6 +32,32 @@ public abstract class AbstractBeanValidatorChainFactory implements BeanValidator
     @Override
     public BeanValidatorChain getChain(String paraName, String variableName) {
         return validatorChainCache.get(getKey(paraName, variableName));
+    }
+
+    @Override
+    public BeanValidatorChain getChain(String paraName) {
+        return getChain(paraName, null);
+    }
+
+    @Override
+    public BeanValidatorChain getChain(String paraName, String variableName, String elementText) {
+        Objects.requireNonNull(elementText);
+
+        try {
+            //得到DOM解析器的工厂实例
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            //从DOM工厂中获得DOM解析器
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            //把要解析的xml文档读入DOM解析器
+            InputStream inputStream = new ByteArrayInputStream(elementText.getBytes("UTF-8"));
+            Document doc = db.parse(inputStream);
+            Element element = doc.getDocumentElement();
+            return getChain(paraName, variableName, element);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
@@ -69,7 +100,9 @@ public abstract class AbstractBeanValidatorChainFactory implements BeanValidator
 
     private String getKey(String paraName, String variableName) {
         Objects.requireNonNull(paraName);
-        Objects.requireNonNull(variableName);
+        if (!StringUtil.hasLength(variableName)) {
+            return paraName;
+        }
 
         return paraName + CONNECTOR + variableName;
     }

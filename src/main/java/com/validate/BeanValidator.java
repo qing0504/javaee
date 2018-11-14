@@ -1,5 +1,7 @@
 package com.validate;
 
+import com.validate.handler.ValidateHandler;
+
 /**
  * @author wanchongyang
  * @date 2018/11/8 9:55 AM
@@ -21,4 +23,6 @@ public interface BeanValidator {
      * @return
      */
     MutableValidatorPropertyValues getPropertyValues();
+
+    ValidateHandler getHandler();
 }

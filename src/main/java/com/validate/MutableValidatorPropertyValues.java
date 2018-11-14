@@ -1,7 +1,5 @@
 package com.validate;
 
-import com.common.utils.StringUtil;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

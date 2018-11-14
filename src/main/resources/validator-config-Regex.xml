@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validators>
+    <!-- 正则验证 -->
+    <validator type="Regex">
+        <!-- 身份证号 -->
+        <property name="regex" value="[1-9]\d{16}[a-zA-Z0-9]{1}" />
+    </validator>
+</validators>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validators>
+    <!-- 整数范围验证 -->
+    <validator type="IntRange">
+        <property name="min" value="20"/>
+        <property name="max" value="120"/>
+    </validator>
+</validators>

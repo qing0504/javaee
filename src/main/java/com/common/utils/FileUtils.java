@@ -89,7 +89,8 @@ public class FileUtils {
      * @param dest 目标文件File对象
      */
     private static void copyDirDetail(File src, File dest) {
-        if(src.isDirectory()) {// 文件夹判断
+        // 文件夹判断
+        if(src.isDirectory()) {
             // 父目录不能拷贝到子目录中判断
             if (dest.getAbsolutePath().contains(src.getAbsolutePath())) {
                 System.out.println("父目录不能拷贝到子目录中");
@@ -102,7 +103,8 @@ public class FileUtils {
             for(File sub : src.listFiles()) {
                 copyDirDetail(sub, new File(dest, sub.getName()));
             }
-        } else if (src.isFile()) {//文件直接拷贝
+        } else if (src.isFile()) {
+            //文件直接拷贝
             copyFile(src, dest);
         } else {
             System.out.println("未知的File对象");

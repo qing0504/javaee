@@ -4,6 +4,8 @@ import com.common.utils.RegexUtil;
 import com.validate.constant.MessageConstant;
 import com.validate.constant.ValidatorConstant;
 import com.validate.exception.BeanValidatorMetadataException;
+import com.validate.handler.IntRangeValidateHandler;
+import com.validate.handler.ValidateHandler;
 
 /**
  * @author wanchongyang
@@ -57,5 +59,10 @@ public class IntRangeBeanValidator extends AbstractBeanValidator {
         if (minInt > maxInt) {
             throw new BeanValidatorMetadataException("illegal IntRange validator. 'max' attribute value is greater than 'min' attribute value.");
         }
+    }
+
+    @Override
+    public ValidateHandler getHandler() {
+        return new IntRangeValidateHandler();
     }
 }
