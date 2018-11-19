@@ -1,6 +1,8 @@
 package com.validate.validate;
 
 import com.validate.*;
+import com.validate.constant.ValidatorConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -52,7 +54,7 @@ public class ValidateTest {
             for (int cellNum = 0; cellNum < cellLen; cellNum++) {
                 // 获取单元格的值
                 String cellValue = ExcelUtil.getValue(firstRow.getCell(cellNum)).trim();
-                String temp = context.getTitleFields().getFieldList().get(cellNum).getFieldTranslationMap().get("cn").getShowName();
+                String temp = context.getTitleFields().getFieldList().get(cellNum).getFieldTranslationMap().get(ValidatorConstant.CN).getShowName();
                 if (!temp.equals(cellValue)) {
                     LOGGER.error("title field name not matched.excel:{}-{}", cellValue, temp);
                     return;
@@ -62,7 +64,6 @@ public class ValidateTest {
             // 4）组装验证数据
             // sheet的总行数
             int totalRowNum = sheet.getLastRowNum();
-            context.setTotalCnt(totalRowNum);
             ValidateItem validateItem = null;
             // 读取行
             for (int rowNum = 1; rowNum <= totalRowNum; rowNum++) {
@@ -75,80 +76,90 @@ public class ValidateTest {
                 // 读取单元格,每行5列
                 for (int cellNum = 0; cellNum < cellLen; cellNum++) {
                     String variableName = context.getTitleFields().getFieldList().get(cellNum).getVariableName();
-                    String cellValue = ExcelUtil.getValue(row.getCell(cellNum));
+                    String cellValue = StringUtils.trim(ExcelUtil.getValue(row.getCell(cellNum)));
                     validateItem.add(variableName, cellValue);
                 }
 
                 context.getItemList().add(validateItem);
             }
+            context.setTotalCnt(context.getItemList().size());
 
             // 5）数据验证
-            // 成功总条数
-            int successCnt = 0;
-            // 失败总条数
-            int failCnt = 0;
             // 第一种：行验证
-            // for (int j = 0; j < context.getItemList().size(); j++) {
-            //     ValidateItem item = context.getItemList().get(j);
-            //     for (int i = 0; i < context.getTitleFields().getFieldList().size(); i++) {
-            //         if (!item.getValidateResult().isValid()) {
-            //             break;
-            //         }
-            //
-            //         MetadataTitleField titleField = context.getTitleFields().getFieldList().get(i);
-            //         List<BeanValidator> validatorList = titleField.getChain().getChain();
-            //         if (validatorList != null && !validatorList.isEmpty()) {
-            //             for (BeanValidator validator : validatorList) {
-            //                 validator.getHandler().validate(validator, titleField, item);
-            //                 if (!item.getValidateResult().isValid()) {
-            //                     break;
-            //                 }
-            //             }
-            //         }
-            //     }
-            //
-            //     if (item.getValidateResult().isValid()) {
-            //         successCnt++;
-            //     } else {
-            //         failCnt++;
-            //     }
-            // }
+            // rowValidate(context);
 
             // 第二种：列验证
-            for (int i = 0; i < context.getTitleFields().getFieldList().size(); i++) {
-                MetadataTitleField titleField = context.getTitleFields().getFieldList().get(i);
-                List<BeanValidator> validatorList = titleField.getChain().getChain();
-                for (int j = 0; j < context.getItemList().size(); j++) {
-                    ValidateItem item = context.getItemList().get(j);
-                    if (!item.getValidateResult().isValid()) {
-                        break;
-                    }
+            columnValidate(context);
 
-                    if (validatorList != null && !validatorList.isEmpty()) {
-                        for (BeanValidator validator : validatorList) {
-                            validator.getHandler().validate(validator, titleField, item);
-                            if (!item.getValidateResult().isValid()) {
-                                break;
-                            }
-                        }
-                    }
-
-                    if (item.getValidateResult().isValid()) {
-                        successCnt++;
-                    } else {
-                        failCnt++;
-                    }
-                }
-            }
-
-            context.setSuccessCnt(successCnt);
-            context.setFailCnt(failCnt);
             // LOGGER.info(JSON.toJSONString(context.getItemList()));
             long end = System.currentTimeMillis();
             System.out.println(end - start);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void rowValidate(ValidateContext context) {
+        // 成功总条数
+        int successCnt = 0;
+        // 失败总条数
+        int failCnt = 0;
+        for (int j = 0; j < context.getItemList().size(); j++) {
+            ValidateItem item = context.getItemList().get(j);
+            for (int i = 0; i < context.getTitleFields().getFieldList().size(); i++) {
+                if (!item.getValidateResult().isValid()) {
+                    break;
+                }
+
+                MetadataTitleField titleField = context.getTitleFields().getFieldList().get(i);
+                List<BeanValidator> validatorList = titleField.getChain().getChain();
+                if (validatorList != null && !validatorList.isEmpty()) {
+                    for (BeanValidator validator : validatorList) {
+                        validator.getHandler().validate(validator, titleField, item);
+                        if (!item.getValidateResult().isValid()) {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (item.getValidateResult().isValid()) {
+                successCnt++;
+            } else {
+                failCnt++;
+            }
+        }
+        context.setSuccessCnt(successCnt);
+        context.setFailCnt(failCnt);
+    }
+
+    private static void columnValidate(ValidateContext context) {
+        int failCnt = 0;
+        for (int i = 0; i < context.getTitleFields().getFieldList().size(); i++) {
+            MetadataTitleField titleField = context.getTitleFields().getFieldList().get(i);
+            List<BeanValidator> validatorList = titleField.getChain().getChain();
+            for (int j = 0; j < context.getItemList().size(); j++) {
+                ValidateItem item = context.getItemList().get(j);
+                if (!item.getValidateResult().isValid()) {
+                    continue;
+                }
+
+                if (validatorList != null && !validatorList.isEmpty()) {
+                    for (BeanValidator validator : validatorList) {
+                        validator.getHandler().validate(validator, titleField, item);
+                        if (!item.getValidateResult().isValid()) {
+                            break;
+                        }
+                    }
+                }
+
+                if (!item.getValidateResult().isValid()) {
+                    failCnt++;
+                }
+            }
+        }
+        context.setFailCnt(failCnt);
+        context.setSuccessCnt(context.getTotalCnt() - failCnt);
     }
 
     private static ValidateContext initContext() {

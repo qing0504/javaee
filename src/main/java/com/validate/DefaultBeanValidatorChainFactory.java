@@ -2,6 +2,8 @@ package com.validate;
 
 import com.common.utils.StringUtil;
 import com.validate.constant.ValidatorConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -11,6 +13,8 @@ import org.w3c.dom.NodeList;
  * @date 2018/11/8 2:06 PM
  */
 public class DefaultBeanValidatorChainFactory extends AbstractBeanValidatorChainFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBeanValidatorChainFactory.class);
+
     @Override
     public BeanValidatorChain parse(Element element) {
         return parseValidatorElements(element);
@@ -41,7 +45,23 @@ public class DefaultBeanValidatorChainFactory extends AbstractBeanValidatorChain
 
                 // type值合法性验证
                 if (!ValidatorConstant.contains(type)) {
-                    throw new IllegalArgumentException("illegal 'type' attribute value.");
+                    if (!el.hasAttribute(CLASS_ATTRIBUTE)) {
+                        throw new IllegalArgumentException("illegal 'type' attribute value.");
+                    }
+
+                    // 自定义BeanValidator实现
+                    String className = el.getAttribute(CLASS_ATTRIBUTE);
+                    if (!StringUtil.hasLength(className)) {
+                        throw new IllegalArgumentException("illegal 'class' attribute value.");
+                    }
+
+                    // 注册BeanValidator
+                    Class<? extends BeanValidator> clazz = getClazz(className);
+                    if (clazz == null) {
+                        throw new IllegalArgumentException("illegal 'class' attribute value.");
+                    }
+
+                    BeanValidatorFactory.register(type, clazz);
                 }
 
                 BeanValidator beanValidator = BeanValidatorFactory.newInstance(type);
@@ -51,5 +71,15 @@ public class DefaultBeanValidatorChainFactory extends AbstractBeanValidatorChain
         }
 
         return beanValidatorChain;
+    }
+
+    private Class<? extends BeanValidator> getClazz(String className) {
+        try {
+            return (Class<? extends BeanValidator>) Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("class not found. className:" + className, e);
+        }
+
+        return null;
     }
 }

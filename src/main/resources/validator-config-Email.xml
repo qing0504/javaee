@@ -5,4 +5,6 @@
         <property name="errorMsgCn" value="无效的邮箱地址"/>
         <property name="errorMsgEn" value="Invalid email address"/>
     </validator>
+
+    <validator type="Custom" class="com.validate.CustomBeanValidator" />
 </validators>

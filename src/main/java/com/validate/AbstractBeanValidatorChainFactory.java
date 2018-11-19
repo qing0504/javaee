@@ -2,6 +2,7 @@ package com.validate;
 
 
 import com.common.utils.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,6 +27,7 @@ public abstract class AbstractBeanValidatorChainFactory implements BeanValidator
     public static final String PROPERTY_ELEMENT = "property";
 
     public static final String TYPE_ATTRIBUTE = "type";
+    public static final String CLASS_ATTRIBUTE = "class";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String VALUE_ATTRIBUTE = "value";
 
@@ -126,7 +128,7 @@ public abstract class AbstractBeanValidatorChainFactory implements BeanValidator
             throw new IllegalArgumentException("Tag 'property' must have a 'name' attribute");
         }
 
-        String value = el.getAttribute(VALUE_ATTRIBUTE);
+        String value = StringUtils.trim(el.getAttribute(VALUE_ATTRIBUTE));
         if (!StringUtil.hasLength(value)) {
             throw new IllegalArgumentException("Tag 'property' must have a 'value' attribute");
         }

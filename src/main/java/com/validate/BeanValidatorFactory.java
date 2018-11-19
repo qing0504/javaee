@@ -37,7 +37,10 @@ public class BeanValidatorFactory {
         }
     }
 
-    private static void register(String type, Class<? extends BeanValidator> clazz) {
+    public static void register(String type, Class<? extends BeanValidator> clazz) {
+        if (clazzCache.containsKey(type)) {
+            throw new IllegalArgumentException("duplicated type " + type);
+        }
         clazzCache.putIfAbsent(type, clazz);
     }
 }

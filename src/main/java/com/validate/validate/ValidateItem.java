@@ -1,9 +1,9 @@
 package com.validate.validate;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * @author wanchongyang
@@ -18,11 +18,11 @@ public class ValidateItem {
     /**
      * 行数据，key：标题属性名，value：标题列对应的值
      */
-    private Map<String, String> rowData;
+    private LinkedHashMap<String, String> rowData;
 
     private ValidateItem() {
         this.validateResult = ValidateResult.SUCCESS;
-        this.rowData = new HashMap<>(64);
+        this.rowData = new LinkedHashMap<>(64);
     }
 
     public static ValidateItem build() {
@@ -32,5 +32,10 @@ public class ValidateItem {
     public ValidateItem add(String key, String value) {
         this.rowData.put(key, value);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return rowData.isEmpty() ? "" : StringUtils.join(this.rowData.values().toArray(), "|$|");
     }
 }

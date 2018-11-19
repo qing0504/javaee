@@ -16,4 +16,8 @@
     <validator type="Regex">
         <property name="regex" value="^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$" />
     </validator>
+
+    <validator type="Custom" class="com.validate.CustomBeanValidator">
+
+    </validator>
 </validators>

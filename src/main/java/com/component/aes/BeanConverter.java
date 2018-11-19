@@ -4,16 +4,16 @@ import com.common.utils.AESUtil;
 import com.component.aes.annotation.Decrypt;
 import com.component.aes.annotation.Encrypt;
 import com.component.aes.annotation.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * JavaBean对象自动加、解密
@@ -22,13 +22,12 @@ import java.util.stream.Collectors;
  * @date 2018/5/6 下午2:20
  */
 public class BeanConverter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeanConverter.class);
+
     private static final ConcurrentHashMap<Field, Method> FIELD_GET_METHOD_MAP = new ConcurrentHashMap<>();
 
     private static final ConcurrentHashMap<Field, Method> FIELD_SET_METHOD_MAP = new ConcurrentHashMap<>();
-
-    private static final ConcurrentHashMap<Class<?>, Field[]> ENCRYPT_FIELDS_CASH = new ConcurrentHashMap<>();
-
-    private static final ConcurrentHashMap<Class<?>, Field[]> DECRYPT_FIELDS_CASH = new ConcurrentHashMap<>();
 
     private static final ConcurrentHashMap<Class<?>, Field[]> FIELDS_CASH = new ConcurrentHashMap<>();
 
@@ -58,6 +57,9 @@ public class BeanConverter {
                     if (clazz.isAnnotationPresent(Encrypt.class)) {
                         for (Field f : fields) {
                             Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            if (getMethod == null) {
+                                continue;
+                            }
                             Object value = getMethod.invoke(o);
                             if (value != null) {
                                 if (value.getClass() == String.class && "".equals(value)) {
@@ -65,6 +67,9 @@ public class BeanConverter {
                                 }
 
                                 Method setMethod = getSetterMethod(superClazz, f);
+                                if (setMethod == null) {
+                                    continue;
+                                }
                                 if (f.isAnnotationPresent(Ignore.class)) {
                                     setMethod.invoke(t, value);
                                 } else {
@@ -75,6 +80,9 @@ public class BeanConverter {
                     } else {
                         for (Field f : fields) {
                             Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            if (getMethod == null) {
+                                continue;
+                            }
                             Object value = getMethod.invoke(o);
                             if (value != null) {
                                 if (value.getClass() == String.class && "".equals(value)) {
@@ -82,6 +90,9 @@ public class BeanConverter {
                                 }
 
                                 Method setMethod = getSetterMethod(superClazz, f);
+                                if (setMethod == null) {
+                                    continue;
+                                }
                                 if (f.isAnnotationPresent(Encrypt.class)) {
                                     setMethod.invoke(t, AESUtil.encrypt(String.valueOf(value), encryptPassword));
                                 } else {
@@ -94,12 +105,8 @@ public class BeanConverter {
                 superClazz = superClazz.getSuperclass();
             }
 
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("BeanConverter toEncrypt e:{}", e);
         }
 
         return t;
@@ -123,9 +130,15 @@ public class BeanConverter {
                     if (clazz.isAnnotationPresent(Decrypt.class)) {
                         for (Field f : fields) {
                             Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            if (getMethod == null) {
+                                continue;
+                            }
                             Object value = getMethod.invoke(o);
                             if (value != null) {
                                 Method setMethod = getSetterMethod(superClazz, f);
+                                if (setMethod == null) {
+                                    continue;
+                                }
                                 if (f.isAnnotationPresent(Ignore.class)) {
                                     setMethod.invoke(t, value);
                                 } else {
@@ -137,9 +150,15 @@ public class BeanConverter {
                     } else {
                         for (Field f : fields) {
                             Method getMethod = getMethod(f.getName(), o.getClass(), true);
+                            if (getMethod == null) {
+                                continue;
+                            }
                             Object value = getMethod.invoke(o);
                             if (value != null) {
                                 Method setMethod = getSetterMethod(superClazz, f);
+                                if (setMethod == null) {
+                                    continue;
+                                }
                                 if (f.isAnnotationPresent(Decrypt.class)) {
                                     Object decryptValue = getClassTypeValue(f.getType(), AESUtil.decrypt(String.valueOf(value), decryptPassword));
                                     setMethod.invoke(t, decryptValue);
@@ -154,14 +173,9 @@ public class BeanConverter {
                 superClazz = superClazz.getSuperclass();
             }
 
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("BeanConverter toDecrypt e:{}", e);
         }
-
         return t;
     }
 
@@ -230,8 +244,7 @@ public class BeanConverter {
                     return method;
                 }
             } catch (NoSuchMethodException e) {
-                System.err.println("Can not find get method for field " + field.getName()
-                        + " in class " + clazz.getName());
+                LOGGER.error("Can not find get method for field {} in class {}. ", field.getName(), clazz.getName());
             }
         }
         return null;
@@ -262,63 +275,10 @@ public class BeanConverter {
                     return method;
                 }
             } catch (NoSuchMethodException e) {
-                System.err.println("Can not find set method for field " + field.getName()
-                        + " in class " + clazz.getName());
+                LOGGER.error("Can not find set method for field {} in class {}. ", field.getName(), clazz.getName());
             }
         }
         return null;
-    }
-
-    private static Field[] getEncryptFields(Class<?> clazz) {
-        Field[] fields = ENCRYPT_FIELDS_CASH.get(clazz);
-        if (fields != null) {
-            return fields;
-        }
-        fields = getFields(clazz);
-        Field[] result = null;
-        if (clazz.isAnnotationPresent(Encrypt.class)) {
-            result = Arrays.asList(fields)
-                    .stream()
-                    .filter(f -> !f.isAnnotationPresent(Ignore.class))
-                    .toArray(Field[]::new);
-        } else {
-            result = Arrays.asList(fields)
-                    .stream()
-                    .filter(f -> f.isAnnotationPresent(Encrypt.class))
-                    .toArray(Field[]::new);
-        }
-
-        Field[] f = ENCRYPT_FIELDS_CASH.putIfAbsent(clazz, result);
-        if (f != null) {
-            return f;
-        }
-        return result;
-    }
-
-    private static Field[] getDecryptFields(Class<?> clazz) {
-        Field[] fields = DECRYPT_FIELDS_CASH.get(clazz);
-        if (fields != null) {
-            return fields;
-        }
-        fields = getFields(clazz);
-        Field[] result = null;
-        if (clazz.isAnnotationPresent(Decrypt.class)) {
-            result = Arrays.asList(fields)
-                    .stream()
-                    .filter(f -> !f.isAnnotationPresent(Ignore.class))
-                    .toArray(Field[]::new);
-        } else {
-            result = Arrays.asList(fields)
-                    .stream()
-                    .filter(f -> f.isAnnotationPresent(Decrypt.class))
-                    .toArray(Field[]::new);
-        }
-
-        Field[] f = DECRYPT_FIELDS_CASH.putIfAbsent(clazz, result);
-        if (f != null) {
-            return f;
-        }
-        return result;
     }
 
     private static Field[] getFields(Class<?> clazz) {
@@ -327,11 +287,16 @@ public class BeanConverter {
             return fields;
         }
         fields = clazz.getDeclaredFields();
-        Field[] f = FIELDS_CASH.putIfAbsent(clazz, fields);
+        // 过滤serialVersionUID字段
+        Field[] realFields = Arrays.asList(fields)
+                .stream()
+                .filter(f -> !"serialVersionUID".equals(f.getName()))
+                .toArray(Field[]::new);
+        Field[] f = FIELDS_CASH.putIfAbsent(clazz, realFields);
         if (f != null) {
             return f;
         }
-        return fields;
+        return realFields;
     }
 
     /**
@@ -351,7 +316,7 @@ public class BeanConverter {
 
             return pd.getWriteMethod();
         } catch (IntrospectionException e) {
-            e.printStackTrace();
+            LOGGER.error("Can not find method for field {} in class {}. ", fieldName, clazz.getName());
         }
 
         return null;
