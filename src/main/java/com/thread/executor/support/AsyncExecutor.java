@@ -11,7 +11,7 @@ public class AsyncExecutor extends ThreadPoolExecutor{
     private AsyncExecutor() {
         super(Runtime.getRuntime().availableProcessors() * 10,
                 500,
-                60L,
+                0L,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(1000),
                 new CustomThreadFactory("default"),

@@ -1,5 +1,8 @@
 package com.validate.validate;
 
+import com.common.utils.ListUtil;
+import com.google.common.collect.Lists;
+import com.thread.executor.support.AsyncExecutor;
 import com.validate.*;
 import com.validate.constant.ValidatorConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +19,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author wanchongyang
@@ -85,11 +92,68 @@ public class ValidateTest {
             context.setTotalCnt(context.getItemList().size());
 
             // 5）数据验证
-            // 第一种：行验证
+            // 第一种：行验证，可以适用多线程处理
             // rowValidate(context);
+            int intervalCount = 500;
+            // list拆分比较耗时间
+            // List<List<ValidateItem>> partition = Lists.partition(context.getItemList(), intervalCount);
+            List<List<ValidateItem>> partition = ListUtil.partition(context.getItemList(), intervalCount);
+            BlockingQueue<List<ValidateItem>> queue = new LinkedBlockingQueue<>(partition.size());
+            partition.stream().forEach(queue::offer);
+            AtomicInteger successCnt = new AtomicInteger();
+            int loopCount = 6;
+            AtomicInteger counter = new AtomicInteger(loopCount);
+            for (int k = 0; k < loopCount; k++) {
+                AsyncExecutor.instance().execute(() -> {
+                    while (true) {
+                        try {
+                            List<ValidateItem> itemList = queue.poll(10, TimeUnit.MILLISECONDS);
+                            if (itemList == null) {
+                                break;
+                            }
 
-            // 第二种：列验证
-            columnValidate(context);
+                            for (int j = 0; j < itemList.size(); j++) {
+                                ValidateItem item = itemList.get(j);
+                                for (int i = 0; i < context.getTitleFields().getFieldList().size(); i++) {
+                                    if (!item.getValidateResult().isValid()) {
+                                        break;
+                                    }
+
+                                    MetadataTitleField titleField = context.getTitleFields().getFieldList().get(i);
+                                    List<BeanValidator> validatorList = titleField.getChain().getChain();
+                                    if (validatorList != null && !validatorList.isEmpty()) {
+                                        for (BeanValidator validator : validatorList) {
+                                            validator.getHandler().validate(validator, titleField, item);
+                                            if (!item.getValidateResult().isValid()) {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (item.getValidateResult().isValid()) {
+                                    successCnt.getAndIncrement();
+                                }
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println(Thread.currentThread().getName());
+                    counter.getAndDecrement();
+                });
+            }
+
+            while (true) {
+                if (counter.get() == 0) {
+                    context.setSuccessCnt(successCnt.get());
+                    context.setFailCnt(context.getTotalCnt() - successCnt.get());
+                    break;
+                }
+            }
+
+            // 第二种：列验证，不适用多线程处理
+            // columnValidate(context);
 
             // LOGGER.info(JSON.toJSONString(context.getItemList()));
             long end = System.currentTimeMillis();

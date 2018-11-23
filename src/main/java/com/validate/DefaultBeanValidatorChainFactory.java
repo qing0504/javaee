@@ -55,7 +55,7 @@ public class DefaultBeanValidatorChainFactory extends AbstractBeanValidatorChain
                         throw new IllegalArgumentException("illegal 'class' attribute value.");
                     }
 
-                    // 注册BeanValidator
+                    // 注册自定义BeanValidator
                     Class<? extends BeanValidator> clazz = getClazz(className);
                     if (clazz == null) {
                         throw new IllegalArgumentException("illegal 'class' attribute value.");

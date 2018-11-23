@@ -24,5 +24,9 @@ public interface BeanValidator {
      */
     MutableValidatorPropertyValues getPropertyValues();
 
+    /**
+     * 获取验证处理器，Validator唯一绑定一个ValidateHandler
+     * @return
+     */
     ValidateHandler getHandler();
 }
