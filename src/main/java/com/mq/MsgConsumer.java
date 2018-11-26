@@ -14,6 +14,9 @@ import java.util.concurrent.TimeoutException;
 public class MsgConsumer {
     private static final String FILE_PATH = "rabbitmq.properties";
 
+    private static final String QUEUE_NAME = "queue.mq.test";
+    private static final String EXCHANGE_NAME = "exchange.mq.test";
+
     public static void main(String[] args) throws IOException {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Properties properties = new Properties();
@@ -25,11 +28,11 @@ public class MsgConsumer {
             Connection connection = connectionFactory.newConnection();
 
             Channel channel = connection.createChannel();
-            channel.exchangeDeclare("exchange.mq.test", BuiltinExchangeType.DIRECT, true, false, null);
-            channel.queueDeclare("queue.mq.test", true, false, false, null);
-            channel.queueBind("queue.mq.test", "exchange.mq.test", "test");
+            channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT, true, false, null);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "test");
 
-            channel.basicConsume("queue.mq.test", false, new DefaultConsumer(channel) {
+            channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     String message = new String(body);

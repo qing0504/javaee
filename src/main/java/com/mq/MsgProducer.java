@@ -13,6 +13,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class MsgProducer {
     private static final String FILE_PATH = "rabbitmq.properties";
+    private static final String EXCHANGE_NAME = "exchange.mq.test";
 
     public static void main(String[] args) throws IOException {
         ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -24,11 +25,11 @@ public class MsgProducer {
         try {
             Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel();
-            channel.exchangeDeclare("exchange.mq.test", BuiltinExchangeType.DIRECT, true, false, null);
+            channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT, true, false, null);
 
             String body = "Hello world!";
             byte[] messageBodyBytes = body.getBytes();
-            channel.basicPublish("exchange.mq.test", "test", true, MessageProperties.PERSISTENT_TEXT_PLAIN, messageBodyBytes);
+            channel.basicPublish(EXCHANGE_NAME, "test", true, MessageProperties.PERSISTENT_TEXT_PLAIN, messageBodyBytes);
         } catch (TimeoutException e) {
             e.printStackTrace();
         }
