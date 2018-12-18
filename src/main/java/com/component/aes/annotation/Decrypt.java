@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 加密注解，可以作用于类、属性上
+ * 解密注解，可以作用于类、属性上
  *  使用说明：
  * 1、注解作用到类上，默认类下所有属性都做解密操作，一般与@Ignore注解一起使用，属性上加@Ignore注解的会做不解密处理，只是单纯的值copy。
  *    这种适用类解密字段比较多场景

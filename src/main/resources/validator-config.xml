@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <validators>
-    <!-- 整数范围验证 -->
-    <validator type="IntRange">
-        <property name="min" value="-1"/>
-        <property name="max" value="999"/>
-    </validator>
+    <!-- 整表验证规则及绑定关系配置：包含表级别的复合验证，列级别的单一属性验证 -->
+    <validator-table validator-group-ref="compositeVG">
+        <!-- 工号 -->
+        <validator-column name="personCode" />
+        <!-- 姓名 -->
+        <validator-column name="personName" />
+        <!-- 年龄 -->
+        <validator-column name="age" validator-group-ref="ageVG" />
+        <!-- 邮箱 -->
+        <validator-column name="email" validator-group-ref="emailVG" />
+        <!-- 身份证号 -->
+        <validator-column name="cardNo" validator-group-ref="cardNoVG" />
+    </validator-table>
 
+    <!-- 复合验证：多行、多列验证 -->
+    <validator-group id="compositeVG">
+        <!-- 自定义验证规则 -->
+        <validator type="Custom" class="com.validate.CustomBeanValidator">
+
+        </validator>
+    </validator-group>
+
+    <!-- 年龄验证 -->
+    <validator-group id="ageVG">
+        <!-- 整数范围验证 -->
+        <validator type="IntRange">
+            <property name="min" value="-1"/>
+            <property name="max" value="999"/>
+        </validator>
+    </validator-group>
     <!-- 邮箱验证 -->
-    <validator type="Email">
-        <property name="errorMsgCn" value="无效的邮箱地址"/>
-        <property name="errorMsgEn" value="Invalid email address"/>
-    </validator>
-
-    <!-- 正则验证 -->
-    <validator type="Regex">
-        <property name="regex" value="^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$" />
-    </validator>
-
-    <validator type="Custom" class="com.validate.CustomBeanValidator" >
-
-    </validator>
+    <validator-group id="emailVG">
+        <!-- 邮箱验证 -->
+        <validator type="Email">
+            <property name="errorMsgCn" value="无效的邮箱地址"/>
+            <property name="errorMsgEn" value="Invalid email address"/>
+        </validator>
+    </validator-group>
+    <!-- 身份证号验证 -->
+    <validator-group id="cardNoVG">
+        <!-- 正则验证 -->
+        <validator type="Regex">
+            <!-- 身份证号 -->
+            <property name="regex" value="[1-9]\d{16}[a-zA-Z0-9]{1}" />
+        </validator>
+    </validator-group>
 </validators>
