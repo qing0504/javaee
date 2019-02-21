@@ -4,6 +4,7 @@ import com.common.utils.AESUtil;
 import com.component.aes.annotation.Decrypt;
 import com.component.aes.annotation.Encrypt;
 import com.component.aes.annotation.Ignore;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,9 @@ public class BeanConverter {
 
     private static final ConcurrentHashMap<Field, Method> FIELD_SET_METHOD_MAP = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<Class<?>, Field[]> FIELDS_CASH = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Method> FIELD_METHOD_CACHE = new ConcurrentHashMap<>();
+
+    private static final ConcurrentHashMap<Class<?>, Field[]> FIELDS_CACHE = new ConcurrentHashMap<>();
 
     private static final String METHOD_GET_PREFIX = "get";
 
@@ -282,7 +285,7 @@ public class BeanConverter {
     }
 
     private static Field[] getFields(Class<?> clazz) {
-        Field[] fields = FIELDS_CASH.get(clazz);
+        Field[] fields = FIELDS_CACHE.get(clazz);
         if (fields != null) {
             return fields;
         }
@@ -292,7 +295,7 @@ public class BeanConverter {
                 .stream()
                 .filter(f -> !"serialVersionUID".equals(f.getName()))
                 .toArray(Field[]::new);
-        Field[] f = FIELDS_CASH.putIfAbsent(clazz, realFields);
+        Field[] f = FIELDS_CACHE.putIfAbsent(clazz, realFields);
         if (f != null) {
             return f;
         }
@@ -309,12 +312,15 @@ public class BeanConverter {
      */
     private static Method getMethod(String fieldName, Class<?> clazz, boolean methodFlag) {
         try {
+            String cacheKey = StringUtils.joinWith("$", clazz.getName(), fieldName, (methodFlag ? METHOD_GET_PREFIX : METHOD_SET_PREFIX));
             PropertyDescriptor pd = new PropertyDescriptor(fieldName, clazz);
-            if (methodFlag) {
-                return pd.getReadMethod();
+            Method method = methodFlag ? pd.getReadMethod() : pd.getWriteMethod();
+            Method m = FIELD_METHOD_CACHE.putIfAbsent(cacheKey, method);
+            if (m != null) {
+                return m;
             }
 
-            return pd.getWriteMethod();
+            return method;
         } catch (IntrospectionException e) {
             LOGGER.error("Can not find method for field {} in class {}. ", fieldName, clazz.getName());
         }
