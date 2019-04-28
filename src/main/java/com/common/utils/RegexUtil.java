@@ -8,8 +8,13 @@ import java.util.regex.Pattern;
  * @date 2018/11/6 4:39 PM
  */
 public class RegexUtil {
-    private static Pattern DOMIN_PATTERN = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern DOMIN_PATTERN = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
 
+    private static final Pattern CHECKDIGIT_PATTERN = Pattern.compile("^-?[1-9]\\d*|0$");
+
+    private static final Pattern CHECKPOSITIVENUMBER_PATTERN = Pattern.compile("^[1-9]\\d*$");
+
+    private static final Pattern CHECKDECIMALS_PATTERN = Pattern.compile("^-?([1-9]\\d*\\.\\d*|0\\.\\d*[0-9]\\d*|\\d*)$");
     /**
      * 验证Email
      * @param email email地址，格式：zhangsan@sina.com，zhangsan@xxx.com.cn，xxx代表邮件服务商
@@ -60,24 +65,30 @@ public class RegexUtil {
     }
 
     /**
-     * 验证整数（正整数和负整数）
+     * 验证整数（正整数、负整数和0）
      * @param digit 一位或多位0-9之间的整数
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkDigit(String digit) {
-        // String regex = "\\-?[1-9]\\d+";
-        String regex = "^\\+?|-?[1-9][0-9]*$";
-        return Pattern.matches(regex,digit);
+        return CHECKDIGIT_PATTERN.matcher(digit).matches();
     }
 
     /**
-     * 验证整数和浮点数（正负整数和正负浮点数）
+     * 验证正整数
+     * @param numberStr 数字字符串
+     * @return 验证成功返回true，验证失败返回false
+     */
+    public static boolean checkPositiveNumber(String numberStr) {
+        return CHECKPOSITIVENUMBER_PATTERN.matcher(numberStr).matches();
+    }
+
+    /**
+     * 验证整数和浮点数（正负整数、正负浮点数和0）
      * @param decimals 一位或多位0-9之间的浮点数，如：1.23，233.30
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkDecimals(String decimals) {
-        String regex = "\\-?[1-9]\\d+(\\.\\d+)?";
-        return Pattern.matches(regex,decimals);
+        return CHECKDECIMALS_PATTERN.matcher(decimals).matches();
     }
 
     /**
@@ -131,7 +142,6 @@ public class RegexUtil {
      */
     public static String getDomain(String url) {
         // 获取完整的域名
-        // Pattern p=Pattern.compile("[^//]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = DOMIN_PATTERN.matcher(url);
         matcher.find();
         return matcher.group();
@@ -154,5 +164,12 @@ public class RegexUtil {
     public static boolean checkIpAddress(String ipAddress) {
         String regex = "[1-9](\\d{1,2})?\\.(0|([1-9](\\d{1,2})?))\\.(0|([1-9](\\d{1,2})?))\\.(0|([1-9](\\d{1,2})?))";
         return Pattern.matches(regex, ipAddress);
+    }
+
+    public static void main(String[] args) {
+        String regex = "^[A-Z]+$";
+        String regex2 = "[A-Z_]+";
+        System.out.println(Pattern.matches(regex, "IMPORT_PARA_VALIDATE_RULE_TEXT_TEST_UPDATEkl"));
+        System.out.println(Pattern.matches(regex2, "IMPORT_PARA_VALIDATE_RULE_TEXT_TEST_UPDATEkl"));
     }
 }

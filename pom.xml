@@ -14,6 +14,8 @@
         <poi.version>4.0.0</poi.version>
         <guava.version>27.0-jre</guava.version>
         <lombok.version>1.18.4</lombok.version>
+        <xerces.version>2.12.0</xerces.version>
+        <hutool.version>4.5.1</hutool.version>
     </properties>
 
     <dependencies>
@@ -66,7 +68,17 @@
             <version>1.2.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <!-- poi -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-poi</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -81,6 +93,11 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml-schemas</artifactId>
             <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xerces.version}</version>
         </dependency>
 
         <!-- MQ -->
