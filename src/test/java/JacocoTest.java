@@ -20,10 +20,10 @@ public class JacocoTest {
     @Test
     public void test() {
         Field[] declaredFields = Student.class.getDeclaredFields();
-        Arrays.stream(declaredFields).filter(f -> f.isSynthetic()).forEach(f -> System.out.println("field: " + f.getName()));
+        Arrays.stream(declaredFields).filter(Field::isSynthetic).forEach(f -> System.out.println("field: " + f.getName()));
 
         Method[] declaredMethods = Student.class.getDeclaredMethods();
-        Arrays.stream(declaredMethods).filter(m -> m.isSynthetic()).forEach(m -> System.out.println("method: " + m.getName()));
+        Arrays.stream(declaredMethods).filter(Method::isSynthetic).forEach(m -> System.out.println("method: " + m.getName()));
 
         Student student = new Student();
         student.setId(1);

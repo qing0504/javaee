@@ -31,7 +31,7 @@ public class BeanValidatorFactory {
 
     public static BeanValidator newInstance(Class<? extends BeanValidator> clazz) {
         try {
-           return clazz.newInstance();
+           return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new BeanValidatorInstantiationException("BeanValidator InstantiationException", e);
         }
