@@ -22,5 +22,9 @@ public class FormatTest {
         DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
         String dateStr = dateFormat.format(new Date());
         System.out.println(dateStr);
+
+        String pattern = "%01d";
+        System.out.println(String.format(pattern, 0));
+        System.out.println(String.format(pattern, 39));
     }
 }

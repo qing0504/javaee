@@ -1,5 +1,6 @@
 package com.sample;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +9,21 @@ import java.util.regex.Pattern;
  */
 public class RegexDemo {
     public static void main(String[] args) {
+        // test();
+
+        // <script[^>]*?>.*?</script>|<iframe[^>]*?>.*?</iframe>|<[\/\!]*?[^<>]*?>
+        // String checkHtmlPattern = "<script[^>]*?>.*?|<iframe[^>]*?>.*?";
+        String checkHtmlPattern = "<script[^>]*?>.*?(</script>)?|<iframe[^>]*?>.*?(</iframe>)?";
+        // String htmlStr = "</script>";
+        // String htmlStr = "<script>";
+        String htmlStr = "<IFRAME>";
+        System.out.println(Pattern.compile(checkHtmlPattern).matcher(htmlStr.toLowerCase()).find());
+
+        Integer a = null;
+        System.out.println(Objects.equals(a, 1));
+    }
+
+    private static void test() {
         //1，把手机号码15921510980转换成159****0980？
         String tel = "15921510980";
         tel = tel.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
@@ -38,6 +54,5 @@ public class RegexDemo {
         while (matcher.find()) {
             System.out.println(matcher.group());
         }
-
     }
 }
