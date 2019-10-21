@@ -1,6 +1,7 @@
 package com.sample;
 
 import com.common.utils.DateUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -29,5 +30,8 @@ public class DateTest {
 
         Date longToDate = new Date(1528250400007L);
         System.out.println(DateUtil.formatDateFull(longToDate));
+
+        System.out.println(DateFormatUtils.format(new Date(), "yyyMMdd"));
+        // System.out.println(DateFormatUtils.format(new Date(), "yyyyMMdd"));
     }
 }
