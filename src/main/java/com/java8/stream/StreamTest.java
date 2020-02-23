@@ -1,7 +1,5 @@
 package com.java8.stream;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -23,7 +21,8 @@ public class StreamTest {
         List<String> test = new ArrayList<>();
 
         for (int i = 0; i < 10000; i++) {
-            test.add(RandomStringUtils.randomAlphabetic(1));
+            // test.add(new RandomStringGenerator.Builder().build().generate(1));
+            test.add(String.valueOf(i));
         }
 
 //        sort(test);
