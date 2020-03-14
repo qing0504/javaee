@@ -1,4 +1,4 @@
-package com.sample;
+package com.generics;
 
 /**
  * @author wanchongyang
