@@ -15,6 +15,8 @@ public class RegexUtil {
     private static final Pattern CHECKPOSITIVENUMBER_PATTERN = Pattern.compile("^[1-9]\\d*$");
 
     private static final Pattern CHECKDECIMALS_PATTERN = Pattern.compile("^-?([1-9]\\d*\\.\\d*|0\\.\\d*[0-9]\\d*|\\d*)$");
+
+    private static final Pattern CHECKHTML_PATTERN = Pattern.compile("<script[^>]*?>.*?(</script>)?|<iframe[^>]*?>.*?(</iframe>)?|<[/!]*?[^<>]*?");
     /**
      * 验证Email
      * @param email email地址，格式：zhangsan@sina.com，zhangsan@xxx.com.cn，xxx代表邮件服务商
@@ -166,10 +168,19 @@ public class RegexUtil {
         return Pattern.matches(regex, ipAddress);
     }
 
+    public static boolean checkHtml(String html) {
+        return CHECKHTML_PATTERN.matcher(html).find();
+    }
+
     public static void main(String[] args) {
         String regex = "^[A-Z]+$";
         String regex2 = "[A-Z_]+";
         System.out.println(Pattern.matches(regex, "IMPORT_PARA_VALIDATE_RULE_TEXT_TEST_UPDATEkl"));
         System.out.println(Pattern.matches(regex2, "IMPORT_PARA_VALIDATE_RULE_TEXT_TEST_UPDATEkl"));
+
+        // String html = "<你好";
+        // String html = "<你好>111<你好>";
+        String html = "<img src='alert(123)'>111</img>";
+        System.out.println(checkHtml(html));
     }
 }
