@@ -16,9 +16,40 @@
         <lombok.version>1.18.4</lombok.version>
         <xerces.version>2.12.0</xerces.version>
         <hutool.version>4.6.7</hutool.version>
+        <debezium.version>1.5.0.Final</debezium.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-api</artifactId>
+            <version>${debezium.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-core</artifactId>
+            <version>${debezium.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-ddl-parser</artifactId>
+            <version>${debezium.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-connector-mysql</artifactId>
+            <version>${debezium.version}</version>
+            <type>pom</type>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.shyiko</groupId>-->
+<!--            <artifactId>mysql-binlog-connector-java</artifactId>-->
+<!--            <version>0.21.0</version>-->
+<!--        </dependency>-->
+
         <!-- 工具类包 -->
         <dependency>
             <groupId>com.google.guava</groupId>
