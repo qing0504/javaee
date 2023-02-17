@@ -13,13 +13,13 @@ public class NumberSortDemo {
         //NumberSortUtil.bubbleSort(nums);
 
         //选择排序
-        //NumberSortUtil.selectSort(nums);
+        // NumberSortUtil.selectSort(nums);
 
         //快速排序
-        NumberSortUtil.quickSort(nums, 1, 3);
+        // NumberSortUtil.quickSort(nums, 1, 3);
 
         //插入排序
-        //NumberSortUtil.insertSort(nums);
+        NumberSortUtil.insertSort(nums);
 
         //归并排序
         //NumberSortUtil.mergeSort(nums, 1, 5);
